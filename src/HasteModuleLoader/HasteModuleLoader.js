@@ -23,11 +23,13 @@ var NodeHaste = require('node-haste/lib/Haste');
 var os = require('os');
 var path = require('path');
 var Q = require('q');
-var resolve = require('resolve');
+var resolve = require('browser-resolve');
 var utils = require('../lib/utils');
+var browserify = require('browserify');
+var source  = require('vinyl-source-stream')
 
 var COVERAGE_STORAGE_VAR_NAME = '____JEST_COVERAGE_DATA____';
-
+var Handlebars = require('handlebars');
 var IS_PATH_BASED_MODULE_NAME = /^(?:\.\.?\/|\/)/;
 
 var NODE_CORE_MODULES = {
@@ -202,10 +204,19 @@ Loader.loadResourceMapFromCacheFile = function(config, options) {
  */
 Loader.prototype._execModule = function(moduleObj) {
   var modulePath = moduleObj.__filename;
+  var moduleContent;
 
-  var moduleContent =
-    utils.readAndPreprocessFileContent(modulePath, this._config);
-
+  if (path.extname(modulePath) === '.handlebars') {
+    moduleContent = browserify({entries: [modulePath]})
+      .transform('hbsfy')
+      .bundle()
+      .pipe(source(modulePath));
+    return;
+  } else {
+    moduleContent = 
+      utils.readAndPreprocessFileContent(modulePath, this._config); 
+  }
+  
   moduleObj.require = this.constructBoundRequire(modulePath);
 
   var moduleLocalBindings = {
@@ -485,6 +496,7 @@ Loader.prototype._nodeModuleNameToPath = function(currPath, moduleName) {
 
   var resolveError = null;
   try {
+
     return resolve.sync(moduleName, {
       basedir: path.dirname(currPath),
       extensions: this._config.moduleFileExtensions

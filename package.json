@@ -4,10 +4,12 @@
   "version": "0.1.18",
   "main": "src/jest.js",
   "dependencies": {
+    "browser-resolve": "git://github.com/securingsincity/node-browser-resolve.git",
     "coffee-script": "1.7.1",
     "cover": "~0.2.8",
     "diff": "~1.0.4",
     "graceful-fs": "^2.0.3",
+    "handlebars": "^2.0.0",
     "harmonize": "~1.33.7",
     "istanbul": "^0.3.2",
     "jasmine-only": "0.1.0",
@@ -23,7 +25,10 @@
     "underscore": "1.2.4"
   },
   "devDependencies": {
-    "jshint": "~2.5.0"
+    "browserify": "^6.3.3",
+    "hbsfy": "^2.2.0",
+    "jshint": "~2.5.0",
+    "vinyl-source-stream": "^1.0.0"
   },
   "bin": {
     "jest": "./bin/jest.js"
@@ -36,7 +41,7 @@
     "url": "https://github.com/facebook/jest"
   },
   "scripts": {
-    "prepublish": "jshint --config=.jshintrc --exclude=src/coverageTemplate.js src && node bin/jest.js",
+    "prepublish": "jshint --config=.jshintrc --exclude=src/coverageTemplate.js src",
     "test": "jshint --config=.jshintrc --exclude=src/coverageTemplate.js src && node bin/jest.js"
   },
   "jest": {
