@@ -1,4 +1,9 @@
 # [Jest](http://facebook.github.io/jest/) [![Build Status](https://travis-ci.org/facebook/jest.svg?branch=master)](https://travis-ci.org/facebook/jest)
+## THIS IS A FORK OF JEST
+
+- Support for **browser** aliases. 
+- Code coverage
+- and it ignores handlebars files! so if you are using hbsfy you won't be screwed
 
 Painless JavaScript Unit Testing
 
