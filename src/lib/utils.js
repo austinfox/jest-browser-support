@@ -7,22 +7,26 @@
  */
 'use strict';
 
+var colors = require('./colors');
 var fs = require('graceful-fs');
 var path = require('path');
 var Q = require('q');
 
 var DEFAULT_CONFIG_VALUES = {
   cacheDirectory: path.resolve(__dirname, '..', '..', '.haste_cache'),
+  coverageCollector: require.resolve('../IstanbulCollector'),
   globals: {},
+  moduleFileExtensions: ['js', 'json'],
   moduleLoader: require.resolve('../HasteModuleLoader/HasteModuleLoader'),
   modulePathIgnorePatterns: [],
   testDirectoryName: '__tests__',
   testEnvironment: require.resolve('../JSDomEnvironment'),
+  testEnvData: {},
   testFileExtensions: ['js'],
-  moduleFileExtensions: ['js', 'json'],
   testPathDirs: ['<rootDir>'],
   testPathIgnorePatterns: ['/node_modules/'],
-  testRunner: require.resolve('../jasmineTestRunner/jasmineTestRunner'),
+  testReporter: require.resolve('../IstanbulTestReporter'),
+  testRunner: require.resolve('../jasmineTestRunner/jasmineTestRunner')
 };
 
 function _replaceRootDirTags(rootDir, config) {
@@ -204,14 +208,19 @@ function normalizeConfig(config) {
         break;
 
       case 'collectCoverage':
+      case 'coverageCollector':
       case 'globals':
       case 'moduleLoader':
       case 'name':
       case 'persistModuleRegistryBetweenSpecs':
       case 'rootDir':
+      case 'setupJSLoaderOptions':
       case 'setupJSTestLoaderOptions':
+      case 'setupJSMockLoaderOptions':
       case 'testDirectoryName':
+      case 'testEnvData':
       case 'testFileExtensions':
+      case 'testReporter':
       case 'moduleFileExtensions':
         value = config[key];
         break;
@@ -232,7 +241,46 @@ function normalizeConfig(config) {
     return newConfig;
   }, newConfig);
 
+  // Fill in some default values for node-haste config
+  newConfig.setupJSLoaderOptions = newConfig.setupJSLoaderOptions || {};
+  newConfig.setupJSTestLoaderOptions = newConfig.setupJSTestLoaderOptions || {};
+  newConfig.setupJSMockLoaderOptions = newConfig.setupJSMockLoaderOptions || {};
+
+  if (!newConfig.setupJSTestLoaderOptions.extensions) {
+    newConfig.setupJSTestLoaderOptions.extensions =
+      newConfig.testFileExtensions.map(_addDot);
+  }
+
+  if (!newConfig.setupJSLoaderOptions.extensions) {
+    newConfig.setupJSLoaderOptions.extensions = uniqueStrings(
+      newConfig.moduleFileExtensions.map(_addDot).concat(
+        newConfig.setupJSTestLoaderOptions.extensions
+      )
+    );
+  }
+
+  if (!newConfig.setupJSMockLoaderOptions.extensions) {
+    newConfig.setupJSMockLoaderOptions.extensions =
+      newConfig.setupJSLoaderOptions.extensions;
+  }
+
   return _replaceRootDirTags(newConfig.rootDir, newConfig);
+}
+
+function _addDot(ext) {
+  return '.' + ext;
+}
+
+function uniqueStrings(set) {
+  var newSet = [];
+  var has = {};
+  set.forEach(function (item) {
+    if (!has[item]) {
+      has[item] = true;
+      newSet.push(item);
+    }
+  });
+  return newSet;
 }
 
 function pathNormalize(dir) {
@@ -319,6 +367,59 @@ function runContentWithLocalBindings(contextRunner, scriptContent, scriptPath,
   }
 }
 
+/**
+ * Given a test result, return a human readable string representing the
+ * failures.
+ *
+ * @param {Object} testResult
+ * @param {boolean} color true if message should include color flags
+ * @return {String}
+ */
+function formatFailureMessage(testResult, color) {
+  var colorize = color ? colors.colorize : function (str) { return str; };
+  var ancestrySeparator = ' \u203A ';
+  var descBullet = colorize('\u25cf ', colors.BOLD);
+  var msgBullet = '  - ';
+  var msgIndent = msgBullet.replace(/./g, ' ');
+
+  return testResult.testResults.filter(function (result) {
+    return result.failureMessages.length !== 0;
+  }).map(function(result) {
+    var failureMessages = result.failureMessages.map(function (errorMsg) {
+      // Filter out q and jasmine entries from the stack trace.
+      // They're super noisy and unhelpful
+      errorMsg = errorMsg.split('\n').filter(function(line) {
+        if (/^\s+at .*?/.test(line)) {
+          // Extract the file path from the trace line
+          var filePath = line.match(/(?:\(|at (?=\/))(.*):[0-9]+:[0-9]+\)?$/);
+          if (filePath
+              && STACK_TRACE_LINE_IGNORE_RE.test(filePath[1])) {
+            return false;
+          }
+        }
+        return true;
+      }).join('\n');
+
+      return msgBullet + errorMsg.replace(/\n/g, '\n' + msgIndent);
+    }).join('\n');
+
+    var testTitleAncestry = result.ancestorTitles.map(function(title) {
+      return colorize(title, colors.BOLD);
+    }).join(ancestrySeparator) + ancestrySeparator;
+
+    return descBullet + testTitleAncestry + result.title + '\n' +
+      failureMessages;
+  }).join('\n');
+}
+
+// A RegExp that matches paths that should not be included in error stack traces
+// (mostly because these paths represent noisy/unhelpful libs)
+var STACK_TRACE_LINE_IGNORE_RE = new RegExp('^(?:' + [
+    path.resolve(__dirname, '..', 'node_modules', 'q'),
+    path.resolve(__dirname, '..', 'vendor', 'jasmine')
+].join('|') + ')');
+
+
 exports.escapeStrForRegex = escapeStrForRegex;
 exports.getLineCoverageFromCoverageInfo = getLineCoverageFromCoverageInfo;
 exports.getLinePercentCoverageFromCoverageInfo =
@@ -329,3 +430,4 @@ exports.normalizeConfig = normalizeConfig;
 exports.pathNormalize = pathNormalize;
 exports.readAndPreprocessFileContent = readAndPreprocessFileContent;
 exports.runContentWithLocalBindings = runContentWithLocalBindings;
+exports.formatFailureMessage = formatFailureMessage;

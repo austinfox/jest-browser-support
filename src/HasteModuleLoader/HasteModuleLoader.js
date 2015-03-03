@@ -15,7 +15,6 @@
  *       Relatedly: It's time we vastly simplify node-haste.
  */
 
-var CoverageCollector = require('../IstanbulCollector');
 var fs = require('graceful-fs');
 var hasteLoaders = require('node-haste/lib/loaders');
 var moduleMocker = require('../lib/moduleMocker');
@@ -26,10 +25,11 @@ var Q = require('q');
 var resolve = require('browser-resolve');
 var utils = require('../lib/utils');
 var browserify = require('browserify');
-var source  = require('vinyl-source-stream')
+var source  = require('vinyl-source-stream');
 
 var COVERAGE_STORAGE_VAR_NAME = '____JEST_COVERAGE_DATA____';
-var Handlebars = require('handlebars');
+
+var NODE_PATH = process.env.NODE_PATH;
 var IS_PATH_BASED_MODULE_NAME = /^(?:\.\.?\/|\/)/;
 
 var NODE_CORE_MODULES = {
@@ -68,6 +68,8 @@ var NODE_CORE_MODULES = {
   vm: true,
   zlib: true
 };
+
+var VENDOR_PATH = path.resolve(__dirname, '../../vendor');
 
 var _configUnmockListRegExpCache = null;
 
@@ -113,6 +115,7 @@ function _getCacheFilePath(config) {
 
 function Loader(config, environment, resourceMap) {
   this._config = config;
+  this._CoverageCollector = require(config.coverageCollector);
   this._coverageCollectors = {};
   this._currentlyExecutingModulePath = '';
   this._environment = environment;
@@ -128,9 +131,12 @@ function Loader(config, environment, resourceMap) {
 
   if (_configUnmockListRegExpCache === null) {
     // Node must have been run with --harmony in order for WeakMap to be
-    // available
-    if (!process.execArgv.some(function(arg) { return arg === '--harmony'; })) {
-      throw new Error('Please run node with the --harmony flag!');
+    // available prior to version 0.12
+    if (typeof WeakMap !== 'function') {
+      throw new Error(
+        'Please run node with the --harmony flag! jest requires WeakMap ' +
+        'which is only available with the --harmony flag in node < v0.12'
+      );
     }
 
     _configUnmockListRegExpCache = new WeakMap();
@@ -213,10 +219,10 @@ Loader.prototype._execModule = function(moduleObj) {
       .pipe(source(modulePath));
     return;
   } else {
-    moduleContent = 
-      utils.readAndPreprocessFileContent(modulePath, this._config); 
+    moduleContent =
+      utils.readAndPreprocessFileContent(modulePath, this._config);
   }
-  
+
   moduleObj.require = this.constructBoundRequire(modulePath);
 
   var moduleLocalBindings = {
@@ -235,12 +241,12 @@ Loader.prototype._execModule = function(moduleObj) {
       || (onlyCollectFrom && onlyCollectFrom[modulePath] === true))) {
     shouldCollectCoverage = true;
   }
-    
+
 
   if (shouldCollectCoverage) {
     if (!this._coverageCollectors.hasOwnProperty(modulePath)) {
       this._coverageCollectors[modulePath] =
-        new CoverageCollector(moduleContent, modulePath);
+        new this._CoverageCollector(moduleContent, modulePath);
     }
     var collector = this._coverageCollectors[modulePath];
     moduleLocalBindings[COVERAGE_STORAGE_VAR_NAME] =
@@ -495,15 +501,22 @@ Loader.prototype._nodeModuleNameToPath = function(currPath, moduleName) {
   }
 
   var resolveError = null;
-  try {
-
-    return resolve.sync(moduleName, {
-      basedir: path.dirname(currPath),
-      extensions: this._config.moduleFileExtensions
-        .map(function(ext){
-          return '.' + ext;
-        })
+    var exts = this._config.moduleFileExtensions.map(function(ext){
+      return '.' + ext;
     });
+  try {
+    if (NODE_PATH) {
+      return resolve.sync(moduleName, {
+        paths: NODE_PATH.split(path.delimiter),
+        basedir: path.dirname(currPath),
+        extensions: exts
+      });
+    } else {
+      return resolve.sync(moduleName, {
+        basedir: path.dirname(currPath),
+        extensions: exts
+      });
+    }
   } catch (e) {
     // Facebook has clowny package.json resolution rules that don't apply to
     // regular Node rules. Until we can make ModuleLoaders more pluggable
@@ -567,6 +580,8 @@ Loader.prototype._shouldMock = function(currPath, moduleName) {
     return false;
   } else if (this._explicitShouldMock.hasOwnProperty(moduleID)) {
     return this._explicitShouldMock[moduleID];
+  } else if (NODE_CORE_MODULES[moduleName]) {
+    return false;
   } else if (this._shouldAutoMock) {
 
     // See if the module is specified in the config as a module that should
@@ -601,6 +616,11 @@ Loader.prototype._shouldMock = function(currPath, moduleName) {
         throw e;
       }
       var unmockRegExp;
+
+      // Never mock the jasmine environment.
+      if (modulePath.indexOf(VENDOR_PATH) === 0) {
+        return false;
+      }
 
       this._configShouldMockModuleNames[moduleName] = true;
       for (var i = 0; i < this._unmockListRegExps.length; i++) {
@@ -862,6 +882,11 @@ Loader.prototype.requireModule = function(currPath, moduleName,
     return require(moduleName);
   }
 
+  // Always natively require the jasmine runner.
+  if (modulePath.indexOf(VENDOR_PATH) === 0) {
+    return require(modulePath);
+  }
+
   if (!modulePath) {
     throw new Error(
       'Cannot find module \'' + moduleName + '\' from \'' + currPath +
@@ -896,6 +921,9 @@ Loader.prototype.requireModule = function(currPath, moduleName,
         modulePath,
         'utf8'
       ));
+    } else if(path.extname(modulePath) === '.node') {
+      // Just do a require if it is a native node module
+      moduleObj.exports = require(modulePath);
     } else {
       this._execModule(moduleObj);
     }
@@ -954,6 +982,17 @@ Loader.prototype.resetModuleRegistry = function() {
             var moduleID = this._getNormalizedModuleID(currPath, moduleName);
             this._explicitShouldMock[moduleID] = false;
             return jestRuntime.exports;
+          }.bind(this),
+
+          getTestEnvData: function() {
+            var frozenCopy = {};
+            // Make a shallow copy only because a deep copy seems like
+            // overkill..
+            Object.keys(this._config.testEnvData).forEach(function(key) {
+              frozenCopy[key] = this._config.testEnvData[key];
+            }, this);
+            Object.freeze(frozenCopy);
+            return frozenCopy;
           }.bind(this),
 
           genMockFromModule: function(moduleName) {

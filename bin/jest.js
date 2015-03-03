@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 /* jshint node: true */
-"use strict";
+'use strict';
 
 var fs = require('fs');
 var harmonize = require('harmonize');
@@ -84,6 +84,13 @@ var argv = optimist
       ),
       type: 'boolean'
     },
+    testEnvData: {
+      description: _wrapDesc(
+        'A JSON object (string) that specifies data that will be made ' +
+        'available in the test environment (via jest.getEnvData())'
+      ),
+      type: 'string'
+    },
     version: {
       alias: 'v',
       description: _wrapDesc('Print the version and exit'),
@@ -105,12 +112,21 @@ var argv = optimist
         'tests for changed files? Or for a specific set of files?'
       );
     }
+
+    if (argv.testEnvData) {
+      argv.testEnvData = JSON.parse(argv.testEnvData);
+    }
   })
-  .argv
+  .argv;
 
 if (argv.help) {
   optimist.showHelp();
-  process.exit(0);
+
+  process.on('exit', function(){
+    process.exit(1);
+  });
+
+  return;
 }
 
 var cwd = process.cwd();
@@ -145,7 +161,12 @@ if (fs.existsSync(cwdJestBinPath)) {
       'installed globally.\n' +
       'Please upgrade this project past Jest version 0.1.5'
     );
-    process.exit(1);
+
+    process.on('exit', function(){
+       process.exit(1);
+    });
+
+    return;
   }
 } else {
   // Otherwise, load this version of Jest.
@@ -165,7 +186,12 @@ if (fs.existsSync(cwdJestBinPath)) {
         'Please run `npm install` to use the version of Jest intended for ' +
         'this project.'
       );
-      process.exit(1);
+
+      process.on('exit', function(){
+        process.exit(1);
+      });
+
+      return;
     }
   }
 }
@@ -175,5 +201,7 @@ if (!argv.version) {
 }
 
 jest.runCLI(argv, cwdPackageRoot, function (success) {
-  process.exit(success ? 0 : 1);
+  process.on('exit', function(){
+    process.exit(success ? 0 : 1);
+  });
 });
