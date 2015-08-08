@@ -20,12 +20,14 @@ var hasteLoaders = require('node-haste/lib/loaders');
 var moduleMocker = require('../lib/moduleMocker');
 var NodeHaste = require('node-haste/lib/Haste');
 var os = require('os');
+var fs = require('graceful-fs');
 var path = require('path');
 var Q = require('q');
 var resolve = require('browser-resolve');
 var utils = require('../lib/utils');
 var browserify = require('browserify');
-var source  = require('vinyl-source-stream');
+var Handlebars = require('handlebars');
+var source = require('vinyl-source-stream');
 
 var COVERAGE_STORAGE_VAR_NAME = '____JEST_COVERAGE_DATA____';
 
@@ -86,8 +88,8 @@ function _buildLoadersList(config) {
 function _constructHasteInst(config, options) {
   var HASTE_IGNORE_REGEX = new RegExp(
     config.modulePathIgnorePatterns.length > 0
-    ? config.modulePathIgnorePatterns.join('|')
-    : '$.'  // never matches
+      ? config.modulePathIgnorePatterns.join('|')
+      : '$.' // never matches
   );
 
   if (!fs.existsSync(config.cacheDirectory)) {
@@ -143,7 +145,7 @@ function Loader(config, environment, resourceMap) {
   }
 
   if (!config.unmockedModulePathPatterns
-      || config.unmockedModulePathPatterns.length === 0) {
+    || config.unmockedModulePathPatterns.length === 0) {
     this._unmockListRegExps = [];
   } else {
     this._unmockListRegExps = _configUnmockListRegExpCache.get(config);
@@ -213,14 +215,17 @@ Loader.prototype._execModule = function(moduleObj) {
   var moduleContent;
 
   if (path.extname(modulePath) === '.handlebars') {
-    moduleContent = browserify({entries: [modulePath]})
-      .transform('hbsfy')
-      .bundle()
-      .pipe(source(modulePath));
+    //this allows us to pass in a handlebars
+    //which would have all of our helpers on it
+    if (!this.Handlebars) {
+      this.Handlebars = Handlebars;
+    }
+    var fileData = fs.readFileSync(modulePath, 'utf8');
+
+    moduleObj.exports = this.Handlebars.compile(fileData);
     return;
   } else {
-    moduleContent =
-      utils.readAndPreprocessFileContent(modulePath, this._config);
+    moduleContent = utils.readAndPreprocessFileContent(modulePath, this._config);
   }
 
   moduleObj.require = this.constructBoundRequire(modulePath);
@@ -238,19 +243,17 @@ Loader.prototype._execModule = function(moduleObj) {
   var onlyCollectFrom = this._config.collectCoverageOnlyFrom;
   var shouldCollectCoverage = false;
   if (this._config.collectCoverage === true && (!onlyCollectFrom
-      || (onlyCollectFrom && onlyCollectFrom[modulePath] === true))) {
+    || (onlyCollectFrom && onlyCollectFrom[modulePath] === true))) {
     shouldCollectCoverage = true;
   }
 
 
   if (shouldCollectCoverage) {
     if (!this._coverageCollectors.hasOwnProperty(modulePath)) {
-      this._coverageCollectors[modulePath] =
-        new this._CoverageCollector(moduleContent, modulePath);
+      this._coverageCollectors[modulePath] = new this._CoverageCollector(moduleContent, modulePath);
     }
     var collector = this._coverageCollectors[modulePath];
-    moduleLocalBindings[COVERAGE_STORAGE_VAR_NAME] =
-      collector.getCoverageDataStore();
+    moduleLocalBindings[COVERAGE_STORAGE_VAR_NAME] = collector.getCoverageDataStore();
     moduleContent = collector.getInstrumentedSource(COVERAGE_STORAGE_VAR_NAME);
   }
 
@@ -314,13 +317,12 @@ Loader.prototype._getDependencyPathsFromResource = function(resource) {
 
     // *facepalm* node-haste is pretty clowny
     if (resource.getModuleIDByOrigin) {
-      requiredModule =
-        resource.getModuleIDByOrigin(requiredModule) || requiredModule;
+      requiredModule = resource.getModuleIDByOrigin(requiredModule) || requiredModule;
     }
 
     try {
       var moduleID = this._getNormalizedModuleID(resource.path, requiredModule);
-    } catch(e) {
+    } catch (e) {
       console.warn(
         'Could not find a `' + requiredModule + '` module while analyzing ' +
         'dependencies of `' + resource.id + '`'
@@ -338,7 +340,7 @@ Loader.prototype._getResource = function(resourceType, resourceName) {
 
   // TODO: Fix this properly in node-haste, not here :(
   if (resource === undefined && resourceType === 'JS' && /\//.test(resourceName)
-      && !/\.js$/.test(resourceName)) {
+    && !/\.js$/.test(resourceName)) {
     resource = this._resourceMap.getResource(
       resourceType,
       resourceName + '.js'
@@ -366,8 +368,8 @@ Loader.prototype._getNormalizedModuleID = function(currPath, moduleName) {
     // then see if there's a node-haste resource for it (so that we can extract
     // info from the resource, like whether its a mock, or a
     if (IS_PATH_BASED_MODULE_NAME.test(moduleName)
-        || (this._getResource('JS', moduleName) === undefined
-            && this._getResource('JSMock', moduleName) === undefined)) {
+      || (this._getResource('JS', moduleName) === undefined
+      && this._getResource('JSMock', moduleName) === undefined)) {
       var absolutePath = this._moduleNameToPath(currPath, moduleName);
       if (absolutePath === undefined) {
         throw new Error(
@@ -442,20 +444,20 @@ Loader.prototype._moduleNameToPath = function(currPath, moduleName) {
     // http://nodejs.org/docs/v0.10.0/api/all.html#all_all_together
     // LOAD_AS_FILE #1
     if (fs.existsSync(modulePath) &&
-        fs.statSync(modulePath).isFile()) {
+      fs.statSync(modulePath).isFile()) {
       return modulePath;
     }
     // LOAD_AS_FILE #2+
     for (i = 0; i < extensions.length; i++) {
       ext = '.' + extensions[i];
       if (fs.existsSync(modulePath + ext) &&
-          fs.statSync(modulePath + ext).isFile()) {
+        fs.statSync(modulePath + ext).isFile()) {
         return modulePath + ext;
       }
     }
     // LOAD_AS_DIRECTORY
     if (fs.existsSync(modulePath) &&
-        fs.statSync(modulePath).isDirectory()) {
+      fs.statSync(modulePath).isDirectory()) {
 
       // LOAD_AS_DIRECTORY #1
       var packagePath = path.join(modulePath, 'package.json');
@@ -473,7 +475,7 @@ Loader.prototype._moduleNameToPath = function(currPath, moduleName) {
       for (i = 0; i < extensions.length; i++) {
         ext = '.' + extensions[i];
         if (fs.existsSync(indexPath + ext) &&
-            fs.statSync(indexPath + ext).isFile()) {
+          fs.statSync(indexPath + ext).isFile()) {
           return indexPath + ext;
         }
       }
@@ -501,9 +503,9 @@ Loader.prototype._nodeModuleNameToPath = function(currPath, moduleName) {
   }
 
   var resolveError = null;
-    var exts = this._config.moduleFileExtensions.map(function(ext){
-      return '.' + ext;
-    });
+  var exts = this._config.moduleFileExtensions.map(function(ext) {
+    return '.' + ext;
+  });
   try {
     if (NODE_PATH) {
       return resolve.sync(moduleName, {
@@ -529,8 +531,7 @@ Loader.prototype._nodeModuleNameToPath = function(currPath, moduleName) {
   // Memoize the project name -> package.json resource lookup map
   if (this._nodeModuleProjectConfigNameToResource === null) {
     this._nodeModuleProjectConfigNameToResource = {};
-    var resources =
-      this._resourceMap.getAllResourcesByType('ProjectConfiguration');
+    var resources = this._resourceMap.getAllResourcesByType('ProjectConfiguration');
     resources.forEach(function(res) {
       this._nodeModuleProjectConfigNameToResource[res.data.name] = res;
     }.bind(this));
@@ -551,8 +552,7 @@ Loader.prototype._nodeModuleNameToPath = function(currPath, moduleName) {
   }
 
   if (subModulePath === null) {
-    subModulePath =
-      resource.data.hasOwnProperty('main')
+    subModulePath = resource.data.hasOwnProperty('main')
       ? resource.data.main
       : 'index.js';
   }
@@ -591,11 +591,10 @@ Loader.prototype._shouldMock = function(currPath, moduleName) {
     } else if (this._unmockListRegExps.length > 0) {
       this._configShouldMockModuleNames[moduleName] = true;
 
-      var manualMockResource =
-        this._getResource('JSMock', moduleName);
+      var manualMockResource = this._getResource('JSMock', moduleName);
       try {
         var modulePath = this._moduleNameToPath(currPath, moduleName);
-      } catch(e) {
+      } catch (e) {
         // If there isn't a real module, we don't have a path to match
         // against the unmockList regexps. If there is also not a manual
         // mock, then we throw because this module doesn't exist anywhere.
@@ -680,8 +679,7 @@ Loader.prototype.getAllCoverageInfo = function() {
 
   var coverageInfo = {};
   for (var filePath in this._coverageCollectors) {
-    coverageInfo[filePath] =
-      this._coverageCollectors[filePath].extractRuntimeCoverageInfo();
+    coverageInfo[filePath] = this._coverageCollectors[filePath].extractRuntimeCoverageInfo();
   }
   return coverageInfo;
 };
@@ -695,7 +693,7 @@ Loader.prototype.getCoverageForFilePath = function(filePath) {
   }
 
   return (
-    this._coverageCollectors.hasOwnProperty(filePath)
+  this._coverageCollectors.hasOwnProperty(filePath)
     ? this._coverageCollectors[filePath].extractRuntimeCoverageInfo()
     : null
   );
@@ -716,7 +714,7 @@ Loader.prototype.getDependenciesFromPath = function(modulePath) {
   }
 
   if (resource.type === 'ProjectConfiguration'
-      || resource.type === 'Resource') {
+    || resource.type === 'Resource') {
     throw new Error(
       'Could not extract dependency information from this type of file!'
     );
@@ -741,7 +739,7 @@ Loader.prototype.getDependentsFromPath = function(modulePath) {
     for (var resourceID in allResources) {
       var resource = allResources[resourceID];
       if (resource.type === 'ProjectConfiguration'
-          || resource.type === 'Resource') {
+        || resource.type === 'Resource') {
         continue;
       }
 
@@ -842,7 +840,7 @@ Loader.prototype.requireMock = function(currPath, moduleName) {
  * @return object
  */
 Loader.prototype.requireModule = function(currPath, moduleName,
-                                          bypassRegistryCache) {
+  bypassRegistryCache) {
   var modulePath;
   var moduleID = this._getNormalizedModuleID(currPath, moduleName);
 
@@ -868,9 +866,9 @@ Loader.prototype.requireModule = function(currPath, moduleName,
   moduleResource = this._getResource('JS', moduleName);
   manualMockResource = this._getResource('JSMock', moduleName);
   if (!moduleResource
-      && manualMockResource
-      && manualMockResource.path !== this._isCurrentlyExecutingManualMock
-      && this._explicitShouldMock[moduleID] !== false) {
+    && manualMockResource
+    && manualMockResource.path !== this._isCurrentlyExecutingManualMock
+    && this._explicitShouldMock[moduleID] !== false) {
     modulePath = manualMockResource.path;
   }
 
@@ -921,7 +919,7 @@ Loader.prototype.requireModule = function(currPath, moduleName,
         modulePath,
         'utf8'
       ));
-    } else if(path.extname(modulePath) === '.node') {
+    } else if (path.extname(modulePath) === '.node') {
       // Just do a require if it is a native node module
       moduleObj.exports = require(modulePath);
     } else {
@@ -978,6 +976,10 @@ Loader.prototype.resetModuleRegistry = function() {
             this._environment.fakeTimers.clearAllTimers();
           }.bind(this),
 
+          setHandlebars: function(hndlbars) {
+            this.Handlebars = hndlbars;
+          }.bind(this),
+
           dontMock: function(moduleName) {
             var moduleID = this._getNormalizedModuleID(currPath, moduleName);
             this._explicitShouldMock[moduleID] = false;
@@ -1017,7 +1019,7 @@ Loader.prototype.resetModuleRegistry = function() {
             for (var key in this._environment.global) {
               globalMock = this._environment.global[key];
               if ((typeof globalMock === 'object' && globalMock !== null)
-                  || typeof globalMock === 'function') {
+                || typeof globalMock === 'function') {
                 globalMock._isMockFunction && globalMock.mockClear();
               }
             }
@@ -1171,7 +1173,7 @@ Loader.prototype.resetModuleRegistry = function() {
                 && moduleAResource.requiredModules.some(function(dep) {
                   return !traversedModules[dep] && _recurse(dep, moduleBName);
                 })
-              );
+                );
             }
 
             return _recurse(moduleAName, moduleBName);
