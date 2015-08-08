@@ -10,7 +10,7 @@
 jest.autoMockOff();
 
 var path = require('path');
-var q = require('q');
+var Promise = require('bluebird');
 var utils = require('../../lib/utils');
 
 describe('HasteModuleLoader', function() {
@@ -30,7 +30,9 @@ describe('HasteModuleLoader', function() {
         return buildLoader();
       });
     } else {
-      return q(new HasteModuleLoader(CONFIG, mockEnvironment, resourceMap));
+      return Promise.resolve(
+        new HasteModuleLoader(CONFIG, mockEnvironment, resourceMap)
+      );
     }
   }
 
@@ -40,7 +42,8 @@ describe('HasteModuleLoader', function() {
     mockEnvironment = {
       global: {
         console: {},
-        mockClearTimers: jest.genMockFn()
+        mockClearTimers: jest.genMockFn(),
+        JSON: JSON
       },
       runSourceText: jest.genMockFn().mockImplementation(function(codeStr) {
         /* jshint evil:true */

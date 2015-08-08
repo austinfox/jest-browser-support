@@ -1,0 +1,3844 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/HasteModuleLoader/HasteModuleLoader.js</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../../prettify.css">
+
+    <style>
+        body, html {
+            margin:0; padding: 0;
+        }
+        body {
+            font-family: Helvetica Neue, Helvetica,Arial;
+            font-size: 10pt;
+        }
+        div.header, div.footer {
+            background: #eee;
+            padding: 1em;
+        }
+        div.header {
+            z-index: 100;
+            position: fixed;
+            top: 0;
+            border-bottom: 1px solid #666;
+            width: 100%;
+        }
+        div.footer {
+            border-top: 1px solid #666;
+        }
+        div.body {
+            margin-top: 10em;
+        }
+        div.meta {
+            font-size: 90%;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+        h1 {
+            font-size: 12pt;
+        }
+        h2 {
+            font-size: 10pt;
+        }
+        pre {
+            font-family: Consolas, Menlo, Monaco, monospace;
+            margin: 0;
+            padding: 0;
+            line-height: 14px;
+            font-size: 14px;
+            -moz-tab-size: 2;
+            -o-tab-size:  2;
+            tab-size: 2;
+        }
+
+        div.path { font-size: 110%; }
+        div.path a:link, div.path a:visited { color: #000; }
+        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
+
+        table.coverage td {
+            margin: 0;
+            padding: 0;
+            color: #111;
+            vertical-align: top;
+        }
+        table.coverage td.line-count {
+            width: 50px;
+            text-align: right;
+            padding-right: 5px;
+        }
+        table.coverage td.line-coverage {
+            color: #777 !important;
+            text-align: right;
+            border-left: 1px solid #666;
+            border-right: 1px solid #666;
+        }
+
+        table.coverage td.text {
+        }
+
+        table.coverage td span.cline-any {
+            display: inline-block;
+            padding: 0 5px;
+            width: 40px;
+        }
+        table.coverage td span.cline-neutral {
+            background: #eee;
+        }
+        table.coverage td span.cline-yes {
+            background: #b5d592;
+            color: #999;
+        }
+        table.coverage td span.cline-no {
+            background: #fc8c84;
+        }
+
+        .cstat-yes { color: #111; }
+        .cstat-no { background: #fc8c84; color: #111; }
+        .fstat-no { background: #ffc520; color: #111 !important; }
+        .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
+        .missing-if-branch {
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: black;
+            color: yellow;
+        }
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
+            color: inherit !important;
+        }
+
+        .entity, .metric { font-weight: bold; }
+        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
+        .metric small { font-size: 80%; font-weight: normal; color: #666; }
+
+        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
+        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
+        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
+        div.coverage-summary th.file { border-right: none !important; }
+        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
+        div.coverage-summary th.pct { border-right: none !important; }
+        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
+        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
+        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
+        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
+        div.coverage-summary td.pic { min-width: 120px !important;  }
+        div.coverage-summary a:link { text-decoration: none; color: #000; }
+        div.coverage-summary a:visited { text-decoration: none; color: #333; }
+        div.coverage-summary a:hover { text-decoration: underline; }
+        div.coverage-summary tfoot td { border-top: 1px solid #666; }
+
+        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
+            height: 10px;
+            width: 7px;
+            display: inline-block;
+            margin-left: 0.5em;
+        }
+        div.coverage-summary .yui3-datatable-sort-indicator {
+            background: url("https://yui-s.yahooapis.com/3.6.0/build/datatable-sort/assets/skins/sam/sort-arrow-sprite.png") no-repeat scroll 0 0 transparent;
+        }
+        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
+            background-position: 0 -20px;
+        }
+        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
+            background-position: 0 -10px;
+        }
+
+        .high { background: #b5d592 !important; }
+        .medium { background: #ffe87c !important; }
+        .low { background: #fc8c84 !important; }
+
+        span.cover-fill, span.cover-empty {
+            display:inline-block;
+            border:1px solid #444;
+            background: white;
+            height: 12px;
+        }
+        span.cover-fill {
+            background: #ccc;
+            border-right: 1px solid #444;
+        }
+        span.cover-empty {
+            background: white;
+            border-left: none;
+        }
+        span.cover-full {
+            border-right: none !important;
+        }
+        pre.prettyprint {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
+    </style>
+</head>
+<body>
+<div class="header medium">
+    <h1>Code coverage report for <span class="entity">src/HasteModuleLoader/HasteModuleLoader.js</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">62.02% <small>(258 / 416)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">56.16% <small>(114 / 203)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">45.31% <small>(29 / 64)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">61.93% <small>(257 / 415)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../index.html">All files</a> &#187; <a href="index.html">src/HasteModuleLoader/</a> &#187; HasteModuleLoader.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948
+949
+950
+951
+952
+953
+954
+955
+956
+957
+958
+959
+960
+961
+962
+963
+964
+965
+966
+967
+968
+969
+970
+971
+972
+973
+974
+975
+976
+977
+978
+979
+980
+981
+982
+983
+984
+985
+986
+987
+988
+989
+990
+991
+992
+993
+994
+995
+996
+997
+998
+999
+1000
+1001
+1002
+1003
+1004
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021
+1022
+1023
+1024
+1025
+1026
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036
+1037
+1038
+1039
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048
+1049
+1050
+1051
+1052
+1053
+1054
+1055
+1056
+1057
+1058
+1059
+1060
+1061
+1062
+1063
+1064
+1065
+1066
+1067
+1068
+1069
+1070
+1071
+1072
+1073
+1074
+1075
+1076
+1077
+1078
+1079
+1080
+1081
+1082
+1083
+1084
+1085
+1086
+1087
+1088
+1089
+1090
+1091
+1092
+1093
+1094
+1095
+1096
+1097
+1098
+1099
+1100
+1101
+1102
+1103
+1104
+1105
+1106
+1107
+1108
+1109
+1110
+1111
+1112
+1113
+1114
+1115
+1116
+1117
+1118
+1119
+1120
+1121
+1122
+1123
+1124
+1125
+1126
+1127
+1128
+1129
+1130
+1131
+1132
+1133
+1134
+1135
+1136
+1137
+1138
+1139
+1140
+1141
+1142
+1143
+1144
+1145
+1146
+1147
+1148
+1149
+1150
+1151
+1152
+1153
+1154
+1155
+1156
+1157
+1158
+1159
+1160
+1161
+1162
+1163
+1164
+1165
+1166
+1167
+1168
+1169
+1170
+1171
+1172
+1173
+1174
+1175</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">268</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">268</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">268</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">74</span>
+<span class="cline-any cline-yes">74</span>
+<span class="cline-any cline-yes">74</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">74</span>
+<span class="cline-any cline-yes">15</span>
+<span class="cline-any cline-yes">15</span>
+<span class="cline-any cline-yes">59</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19</span>
+<span class="cline-any cline-yes">17</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51</span>
+<span class="cline-any cline-yes">39</span>
+<span class="cline-any cline-yes">39</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51</span>
+<span class="cline-any cline-yes">51</span>
+<span class="cline-any cline-yes">51</span>
+<span class="cline-any cline-yes">10</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">79</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35</span>
+<span class="cline-any cline-yes">35</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">33</span>
+<span class="cline-any cline-yes">33</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">17</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">42</span>
+<span class="cline-any cline-yes">42</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">39</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-yes">24</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-yes">23</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">15</span>
+<span class="cline-any cline-yes">15</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * Copyright (c) 2014, Facebook, Inc. All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+'use strict';
+&nbsp;
+/**
+ * TODO: This file has grown into a monster. It really needs to be refactored
+ *       into smaller pieces. One of the best places to start would be to move a
+ *       bunch of the logic that exists here into node-haste.
+ *
+ *       Relatedly: It's time we vastly simplify node-haste.
+ */
+&nbsp;
+var CoverageCollector = require('../IstanbulCollector');
+var fs = require('graceful-fs');
+var hasteLoaders = require('node-haste/lib/loaders');
+var moduleMocker = require('../lib/moduleMocker');
+var NodeHaste = require('node-haste/lib/Haste');
+var os = require('os');
+var path = require('path');
+var Q = require('q');
+var resolve = require('browser-resolve');
+var utils = require('../lib/utils');
+var browserify = require('browserify');
+var source  = require('vinyl-source-stream')
+&nbsp;
+var COVERAGE_STORAGE_VAR_NAME = '____JEST_COVERAGE_DATA____';
+var Handlebars = require('handlebars');
+var IS_PATH_BASED_MODULE_NAME = /^(?:\.\.?\/|\/)/;
+&nbsp;
+var NODE_CORE_MODULES = {
+  assert: true,
+  buffer: true,
+  child_process: true, // jshint ignore:line
+  cluster: true,
+  console: true,
+  constants: true,
+  crypto: true,
+  dgram: true,
+  dns: true,
+  domain: true,
+  events: true,
+  freelist: true,
+  fs: true,
+  http: true,
+  https: true,
+  module: true,
+  net: true,
+  os: true,
+  path: true,
+  punycode: true,
+  querystring: true,
+  readline: true,
+  repl: true,
+  smalloc: true,
+  stream: true,
+  string_decoder: true, // jshint ignore:line
+  sys: true,
+  timers: true,
+  tls: true,
+  tty: true,
+  url: true,
+  util: true,
+  vm: true,
+  zlib: true
+};
+&nbsp;
+var _configUnmockListRegExpCache = null;
+&nbsp;
+function _buildLoadersList(config) {
+  return [
+    new hasteLoaders.ProjectConfigurationLoader(),
+    new hasteLoaders.JSTestLoader(config.setupJSTestLoaderOptions),
+    new hasteLoaders.JSMockLoader(config.setupJSMockLoaderOptions),
+    new hasteLoaders.JSLoader(config.setupJSLoaderOptions),
+    new hasteLoaders.ResourceLoader()
+  ];
+}
+&nbsp;
+function _constructHasteInst(config, options) {
+  var HASTE_IGNORE_REGEX = new RegExp(
+    config.modulePathIgnorePatterns.length &gt; 0
+    ? <span class="branch-0 cbranch-no" title="branch not covered" >config.modulePathIgnorePatterns.join('|')</span>
+    : '$.'  // never matches
+  );
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!fs.existsSync(config.cacheDirectory)) {
+<span class="cstat-no" title="statement not covered" >    fs.mkdirSync(config.cacheDirectory);</span>
+  }
+&nbsp;
+  return new NodeHaste(
+    _buildLoadersList(config),
+    (config.testPathDirs || <span class="branch-1 cbranch-no" title="branch not covered" >[])</span>,
+    {
+      ignorePaths: function(path) {
+        return path.match(HASTE_IGNORE_REGEX);
+      },
+      version: JSON.stringify(config),
+      useNativeFind: true,
+      maxProcesses: os.cpus().length,
+      maxOpenFiles: options.maxOpenFiles || 100
+    }
+  );
+}
+&nbsp;
+function _getCacheFilePath(config) {
+  return path.join(config.cacheDirectory, 'cache-' + config.name);
+}
+&nbsp;
+function Loader(config, environment, resourceMap) {
+  this._config = config;
+  this._coverageCollectors = {};
+  this._currentlyExecutingModulePath = '';
+  this._environment = environment;
+  this._explicitShouldMock = {};
+  this._explicitlySetMocks = {};
+  this._isCurrentlyExecutingManualMock = null;
+  this._mockMetaDataCache = {};
+  this._nodeModuleProjectConfigNameToResource = null;
+  this._resourceMap = resourceMap;
+  this._reverseDependencyMap = null;
+  this._shouldAutoMock = true;
+  this._configShouldMockModuleNames = {};
+&nbsp;
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (_configUnmockListRegExpCache === null) {
+    // Node must have been run with --harmony in order for WeakMap to be
+    // available
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!process.execArgv.some(function(arg) { return arg === '--harmony'; })) {
+<span class="cstat-no" title="statement not covered" >      throw new Error('Please run node with the --harmony flag!');</span>
+    }
+&nbsp;
+    _configUnmockListRegExpCache = new WeakMap();
+  }
+&nbsp;
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (!config.unmockedModulePathPatterns
+      || <span class="branch-1 cbranch-no" title="branch not covered" >config.unmockedModulePathPatterns.length === 0)</span> {
+    this._unmockListRegExps = [];
+  } else {
+<span class="cstat-no" title="statement not covered" >    this._unmockListRegExps = _configUnmockListRegExpCache.get(config);</span>
+<span class="cstat-no" title="statement not covered" >    if (!this._unmockListRegExps) {</span>
+<span class="cstat-no" title="statement not covered" >      this._unmockListRegExps = config.unmockedModulePathPatterns</span>
+        .map(<span class="fstat-no" title="function not covered" >function(unmockPathRe) {</span>
+<span class="cstat-no" title="statement not covered" >          return new RegExp(unmockPathRe);</span>
+        });
+<span class="cstat-no" title="statement not covered" >      _configUnmockListRegExpCache.set(config, this._unmockListRegExps);</span>
+    }
+  }
+&nbsp;
+  this.resetModuleRegistry();
+}
+&nbsp;
+Loader.loadResourceMap = function(config, options) {
+  options = options || {};
+&nbsp;
+  var deferred = Q.defer();
+  try {
+    _constructHasteInst(config, options).update(
+      _getCacheFilePath(config),
+      function(resourceMap) {
+        deferred.resolve(resourceMap);
+      }
+    );
+  } catch (e) {
+<span class="cstat-no" title="statement not covered" >    deferred.reject(e);</span>
+  }
+&nbsp;
+  return deferred.promise;
+};
+&nbsp;
+Loader.loadResourceMapFromCacheFile = <span class="fstat-no" title="function not covered" >function(config, options) {</span>
+<span class="cstat-no" title="statement not covered" >  options = options || {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var deferred = Q.defer();</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    var hasteInst = _constructHasteInst(config, options);</span>
+<span class="cstat-no" title="statement not covered" >    hasteInst.loadMap(</span>
+      _getCacheFilePath(config),
+<span class="fstat-no" title="function not covered" >      function(err, map) {</span>
+<span class="cstat-no" title="statement not covered" >        if (err) {</span>
+<span class="cstat-no" title="statement not covered" >          deferred.reject(err);</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >          deferred.resolve(map);</span>
+        }
+      }
+    );
+  } catch (e) {
+<span class="cstat-no" title="statement not covered" >    deferred.reject(e);</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return deferred.promise;</span>
+};
+&nbsp;
+/**
+ * Given the path to a module: Read it from disk (synchronously) and
+ * evaluate it's constructor function to generate the module and exports
+ * objects.
+ *
+ * @param string modulePath
+ * @return object
+ */
+Loader.prototype._execModule = function(moduleObj) {
+  var modulePath = moduleObj.__filename;
+  var moduleContent;
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (path.extname(modulePath) === '.handlebars') {
+<span class="cstat-no" title="statement not covered" >    moduleContent = browserify({entries: [modulePath]})</span>
+      .transform('hbsfy')
+      .bundle()
+      .pipe(source(modulePath));
+<span class="cstat-no" title="statement not covered" >    return;</span>
+  } else {
+    moduleContent = 
+      utils.readAndPreprocessFileContent(modulePath, this._config); 
+  }
+  
+  moduleObj.require = this.constructBoundRequire(modulePath);
+&nbsp;
+  var moduleLocalBindings = {
+    'module': moduleObj,
+    'exports': moduleObj.exports,
+    'require': moduleObj.require,
+    '__dirname': path.dirname(modulePath),
+    '__filename': modulePath,
+    'global': this._environment.global,
+    'jest': this._builtInModules['jest-runtime'](modulePath).exports
+  };
+&nbsp;
+  var onlyCollectFrom = this._config.collectCoverageOnlyFrom;
+  var shouldCollectCoverage = false;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (this._config.collectCoverage === true &amp;&amp; (<span class="branch-1 cbranch-no" title="branch not covered" >!onlyCollectFrom</span>
+      || (<span class="branch-2 cbranch-no" title="branch not covered" >onlyCollectFrom </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >onlyCollectFrom[modulePath] === true)</span>)) {
+<span class="cstat-no" title="statement not covered" >    shouldCollectCoverage = true;</span>
+  }
+    
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (shouldCollectCoverage) {
+<span class="cstat-no" title="statement not covered" >    if (!this._coverageCollectors.hasOwnProperty(modulePath)) {</span>
+<span class="cstat-no" title="statement not covered" >      this._coverageCollectors[modulePath] =</span>
+        new CoverageCollector(moduleContent, modulePath);
+    }
+<span class="cstat-no" title="statement not covered" >    var collector = this._coverageCollectors[modulePath];</span>
+<span class="cstat-no" title="statement not covered" >    moduleLocalBindings[COVERAGE_STORAGE_VAR_NAME] =</span>
+      collector.getCoverageDataStore();
+<span class="cstat-no" title="statement not covered" >    moduleContent = collector.getInstrumentedSource(COVERAGE_STORAGE_VAR_NAME);</span>
+  }
+&nbsp;
+  var lastExecutingModulePath = this._currentlyExecutingModulePath;
+  this._currentlyExecutingModulePath = modulePath;
+&nbsp;
+  var origCurrExecutingManualMock = this._isCurrentlyExecutingManualMock;
+  this._isCurrentlyExecutingManualMock = modulePath;
+&nbsp;
+  utils.runContentWithLocalBindings(
+    this._environment.runSourceText.bind(this._environment),
+    moduleContent,
+    modulePath,
+    moduleLocalBindings
+  );
+&nbsp;
+  this._isCurrentlyExecutingManualMock = origCurrExecutingManualMock;
+  this._currentlyExecutingModulePath = lastExecutingModulePath;
+};
+&nbsp;
+Loader.prototype._generateMock = function(currPath, moduleName) {
+  var modulePath = this._moduleNameToPath(currPath, moduleName);
+&nbsp;
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (!this._mockMetaDataCache.hasOwnProperty(modulePath)) {
+    // This allows us to handle circular dependencies while generating an
+    // automock
+    this._mockMetaDataCache[modulePath] = moduleMocker.getMetadata({});
+&nbsp;
+    // In order to avoid it being possible for automocking to potentially cause
+    // side-effects within the module environment, we need to execute the module
+    // in isolation. This accomplishes that by temporarily clearing out the
+    // module and mock registries while the module being analyzed is executed.
+    //
+    // An example scenario where this could cause issue is if the module being
+    // mocked has calls into side-effectful APIs on another module.
+    var origMockRegistry = this._mockRegistry;
+    var origModuleRegistry = this._moduleRegistry;
+    this._mockRegistry = {};
+    this._moduleRegistry = {};
+&nbsp;
+    var moduleExports = this.requireModule(currPath, moduleName);
+&nbsp;
+    // Restore the "real" module/mock registries
+    this._mockRegistry = origMockRegistry;
+    this._moduleRegistry = origModuleRegistry;
+&nbsp;
+    this._mockMetaDataCache[modulePath] = moduleMocker.getMetadata(
+      moduleExports
+    );
+  }
+&nbsp;
+  return moduleMocker.generateFromMetadata(
+    this._mockMetaDataCache[modulePath]
+  );
+};
+&nbsp;
+Loader.prototype._getDependencyPathsFromResource = <span class="fstat-no" title="function not covered" >function(resource) {</span>
+<span class="cstat-no" title="statement not covered" >  var dependencyPaths = [];</span>
+<span class="cstat-no" title="statement not covered" >  for (var i = 0; i &lt; resource.requiredModules.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >    var requiredModule = resource.requiredModules[i];</span>
+&nbsp;
+    // *facepalm* node-haste is pretty clowny
+<span class="cstat-no" title="statement not covered" >    if (resource.getModuleIDByOrigin) {</span>
+<span class="cstat-no" title="statement not covered" >      requiredModule =</span>
+        resource.getModuleIDByOrigin(requiredModule) || requiredModule;
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      var moduleID = this._getNormalizedModuleID(resource.path, requiredModule);</span>
+    } catch(e) {
+<span class="cstat-no" title="statement not covered" >      console.warn(</span>
+        'Could not find a `' + requiredModule + '` module while analyzing ' +
+        'dependencies of `' + resource.id + '`'
+      );
+<span class="cstat-no" title="statement not covered" >      continue;</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    dependencyPaths.push(this._getRealPathFromNormalizedModuleID(moduleID));</span>
+  }
+<span class="cstat-no" title="statement not covered" >  return dependencyPaths;</span>
+};
+&nbsp;
+Loader.prototype._getResource = function(resourceType, resourceName) {
+  var resource = this._resourceMap.getResource(resourceType, resourceName);
+&nbsp;
+  // TODO: Fix this properly in node-haste, not here :(
+  if (resource === undefined &amp;&amp; resourceType === 'JS' &amp;&amp; /\//.test(resourceName)
+      &amp;&amp; !/\.js$/.test(resourceName)) {
+    resource = this._resourceMap.getResource(
+      resourceType,
+      resourceName + '.js'
+    );
+  }
+&nbsp;
+  return resource;
+};
+&nbsp;
+Loader.prototype._getNormalizedModuleID = function(currPath, moduleName) {
+  var moduleType;
+  var mockAbsPath = null;
+  var realAbsPath = null;
+&nbsp;
+  if (this._builtInModules.hasOwnProperty(moduleName)) {
+    moduleType = 'builtin';
+    realAbsPath = moduleName;
+  } else if (NODE_CORE_MODULES.hasOwnProperty(moduleName)) {
+    moduleType = 'node';
+    realAbsPath = moduleName;
+  } else {
+    moduleType = 'user';
+&nbsp;
+    // If this is a path-based module name, resolve it to an absolute path and
+    // then see if there's a node-haste resource for it (so that we can extract
+    // info from the resource, like whether its a mock, or a
+    if (IS_PATH_BASED_MODULE_NAME.test(moduleName)
+        || (this._getResource('JS', moduleName) === undefined
+            &amp;&amp; this._getResource('JSMock', moduleName) === undefined)) {
+      var absolutePath = this._moduleNameToPath(currPath, moduleName);
+      if (absolutePath === undefined) {
+        throw new Error(
+          'Cannot find module \'' + moduleName + '\' from \'' + currPath + '\''
+        );
+      }
+&nbsp;
+      // See if node-haste is already aware of this resource. If so, we need to
+      // look up if it has an associated manual mock.
+      var resource = this._resourceMap.getResourceByPath(absolutePath);
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (resource) {
+        if (resource.type === 'JS') {
+          realAbsPath = absolutePath;
+        } else <span class="missing-if-branch" title="if path not taken" >I</span>if (resource.type === 'JSMock') {
+<span class="cstat-no" title="statement not covered" >          mockAbsPath = absolutePath;</span>
+        }
+        moduleName = resource.id;
+      }
+    }
+&nbsp;
+    if (realAbsPath === null) {
+      var moduleResource = this._getResource('JS', moduleName);
+      if (moduleResource) {
+        realAbsPath = moduleResource.path;
+      }
+    }
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (mockAbsPath === null) {
+      var mockResource = this._getResource('JSMock', moduleName);
+      if (mockResource) {
+        mockAbsPath = mockResource.path;
+      }
+    }
+  }
+&nbsp;
+  return [moduleType, realAbsPath, mockAbsPath].join(':');
+};
+&nbsp;
+Loader.prototype._getRealPathFromNormalizedModuleID = <span class="fstat-no" title="function not covered" >function(moduleID) {</span>
+<span class="cstat-no" title="statement not covered" >  return moduleID.split(':')[1];</span>
+};
+&nbsp;
+/**
+ * Given a module name and the current file path, returns the normalized
+ * (absolute) module path for said module. Relative-path CommonJS require()s
+ * such as `require('./otherModule')` need to be looked up with context of
+ * the module that's calling require()
+ *
+ * Also contains special case logic for built-in modules, in which it just
+ * returns the module name.
+ *
+ * @param string currPath The path of the file that is attempting to
+ *                            resolve the module
+ * @param string moduleName The name of the module to be resolved
+ * @return string
+ */
+Loader.prototype._moduleNameToPath = function(currPath, moduleName) {
+  if (this._builtInModules.hasOwnProperty(moduleName)) {
+    return moduleName;
+  }
+&nbsp;
+  // Relative-path CommonJS require()s such as `require('./otherModule')`
+  // need to be looked up with context of the module that's calling
+  // require().
+  if (IS_PATH_BASED_MODULE_NAME.test(moduleName)) {
+    // Normalize the relative path to an absolute path
+    var modulePath = path.resolve(currPath, '..', moduleName);
+&nbsp;
+    var ext, i;
+    var extensions = this._config.moduleFileExtensions;
+&nbsp;
+    // http://nodejs.org/docs/v0.10.0/api/all.html#all_all_together
+    // LOAD_AS_FILE #1
+    if (fs.existsSync(modulePath) &amp;&amp;
+        fs.statSync(modulePath).isFile()) {
+      return modulePath;
+    }
+    // LOAD_AS_FILE #2+
+    for (i = 0; i &lt; extensions.length; i++) {
+      ext = '.' + extensions[i];
+      if (fs.existsSync(modulePath + ext) &amp;&amp;
+          fs.statSync(modulePath + ext).isFile()) {
+        return modulePath + ext;
+      }
+    }
+    // LOAD_AS_DIRECTORY
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (fs.existsSync(modulePath) &amp;&amp;
+<span class="branch-1 cbranch-no" title="branch not covered" >        fs.statSync(modulePath).isDirectory())</span> {
+&nbsp;
+      // LOAD_AS_DIRECTORY #1
+<span class="cstat-no" title="statement not covered" >      var packagePath = path.join(modulePath, 'package.json');</span>
+<span class="cstat-no" title="statement not covered" >      if (fs.existsSync(packagePath)) {</span>
+<span class="cstat-no" title="statement not covered" >        var mainPath = path.join(modulePath, require(packagePath).main);</span>
+<span class="cstat-no" title="statement not covered" >        if (fs.existsSync(mainPath)) {</span>
+<span class="cstat-no" title="statement not covered" >          return mainPath;</span>
+        }
+      }
+&nbsp;
+      // The required path is a valid directory, but there's no matching
+      // js file at the same path. So look in the directory for an
+      // index.js file.
+<span class="cstat-no" title="statement not covered" >      var indexPath = path.join(modulePath, 'index');</span>
+<span class="cstat-no" title="statement not covered" >      for (i = 0; i &lt; extensions.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >        ext = '.' + extensions[i];</span>
+<span class="cstat-no" title="statement not covered" >        if (fs.existsSync(indexPath + ext) &amp;&amp;</span>
+            fs.statSync(indexPath + ext).isFile()) {
+<span class="cstat-no" title="statement not covered" >          return indexPath + ext;</span>
+        }
+      }
+    }
+  } else {
+    var resource = this._getResource('JS', moduleName);
+    if (!resource) {
+      return this._nodeModuleNameToPath(
+        currPath,
+        moduleName
+      );
+    }
+    return resource.path;
+  }
+};
+&nbsp;
+Loader.prototype._nodeModuleNameToPath = function(currPath, moduleName) {
+  // Handle module names like require('jest/lib/util')
+  var subModulePath = null;
+  var moduleProjectPart = moduleName;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (/\//.test(moduleName)) {
+<span class="cstat-no" title="statement not covered" >    var projectPathParts = moduleName.split('/');</span>
+<span class="cstat-no" title="statement not covered" >    moduleProjectPart = projectPathParts.shift();</span>
+<span class="cstat-no" title="statement not covered" >    subModulePath = projectPathParts.join('/');</span>
+  }
+&nbsp;
+  var resolveError = null;
+  try {
+&nbsp;
+    return resolve.sync(moduleName, {
+      basedir: path.dirname(currPath),
+      extensions: this._config.moduleFileExtensions
+        .map(function(ext){
+          return '.' + ext;
+        })
+    });
+  } catch (e) {
+    // Facebook has clowny package.json resolution rules that don't apply to
+    // regular Node rules. Until we can make ModuleLoaders more pluggable
+    // (so that FB can have a custom ModuleLoader and all the normal people can
+    // have a normal ModuleLoader), we catch node-resolution exceptions and
+    // fall back to some custom resolution logic before throwing the error.
+    resolveError = e;
+  }
+&nbsp;
+  // Memoize the project name -&gt; package.json resource lookup map
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (this._nodeModuleProjectConfigNameToResource === null) {
+    this._nodeModuleProjectConfigNameToResource = {};
+    var resources =
+      this._resourceMap.getAllResourcesByType('ProjectConfiguration');
+    resources.forEach(<span class="fstat-no" title="function not covered" >function(res) {</span>
+<span class="cstat-no" title="statement not covered" >      this._nodeModuleProjectConfigNameToResource[res.data.name] = res;</span>
+    }.bind(this));
+  }
+&nbsp;
+  // Get the resource for the package.json file
+  var resource = this._nodeModuleProjectConfigNameToResource[moduleProjectPart];
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (!resource) {
+    throw resolveError;
+  }
+&nbsp;
+  // Make sure the resource path is above the currPath in the fs path
+  // tree. If so, just use node's resolve
+<span class="cstat-no" title="statement not covered" >  var resourceDirname = path.dirname(resource.path);</span>
+<span class="cstat-no" title="statement not covered" >  var currFileDirname = path.dirname(currPath);</span>
+<span class="cstat-no" title="statement not covered" >  if (resourceDirname.indexOf(currFileDirname) &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >    throw resolveError;</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (subModulePath === null) {</span>
+<span class="cstat-no" title="statement not covered" >    subModulePath =</span>
+      resource.data.hasOwnProperty('main')
+      ? resource.data.main
+      : 'index.js';
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return this._moduleNameToPath(</span>
+    resource.path,
+    './' + subModulePath
+  );
+};
+&nbsp;
+/**
+ * Indicates whether a given module is mocked per the current state of the
+ * module loader. When a module is "mocked", that means calling
+ * `requireModuleOrMock()` for the module will return the mock version
+ * rather than the real version.
+ *
+ * @param string currPath The path of the file that is attempting to
+ *                            resolve the module
+ * @param string moduleName The name of the module to be resolved
+ * @return bool
+ */
+Loader.prototype._shouldMock = function(currPath, moduleName) {
+  var moduleID = this._getNormalizedModuleID(currPath, moduleName);
+  if (this._builtInModules.hasOwnProperty(moduleName)) {
+    return false;
+  } else if (this._explicitShouldMock.hasOwnProperty(moduleID)) {
+    return this._explicitShouldMock[moduleID];
+  } else if (this._shouldAutoMock) {
+&nbsp;
+    // See if the module is specified in the config as a module that should
+    // never be mocked
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (this._configShouldMockModuleNames.hasOwnProperty(moduleName)) {
+<span class="cstat-no" title="statement not covered" >      return this._configShouldMockModuleNames[moduleName];</span>
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (this._unmockListRegExps.length &gt; 0) {
+<span class="cstat-no" title="statement not covered" >      this._configShouldMockModuleNames[moduleName] = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      var manualMockResource =</span>
+        this._getResource('JSMock', moduleName);
+<span class="cstat-no" title="statement not covered" >      try {</span>
+<span class="cstat-no" title="statement not covered" >        var modulePath = this._moduleNameToPath(currPath, moduleName);</span>
+      } catch(e) {
+        // If there isn't a real module, we don't have a path to match
+        // against the unmockList regexps. If there is also not a manual
+        // mock, then we throw because this module doesn't exist anywhere.
+        //
+        // However, it's possible that someone has a manual mock for a
+        // non-existant real module. In this case, we should mock the module
+        // (because we technically can).
+        //
+        // Ideally this should never happen, but we have some odd
+        // pre-existing edge-cases that rely on it so we need it for now.
+        //
+        // I'd like to eliminate this behavior in favor of requiring that
+        // all module environments are complete (meaning you can't just
+        // write a manual mock as a substitute for a real module).
+<span class="cstat-no" title="statement not covered" >        if (manualMockResource) {</span>
+<span class="cstat-no" title="statement not covered" >          return true;</span>
+        }
+<span class="cstat-no" title="statement not covered" >        throw e;</span>
+      }
+<span class="cstat-no" title="statement not covered" >      var unmockRegExp;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this._configShouldMockModuleNames[moduleName] = true;</span>
+<span class="cstat-no" title="statement not covered" >      for (var i = 0; i &lt; this._unmockListRegExps.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >        unmockRegExp = this._unmockListRegExps[i];</span>
+<span class="cstat-no" title="statement not covered" >        if (unmockRegExp.test(modulePath)) {</span>
+<span class="cstat-no" title="statement not covered" >          return this._configShouldMockModuleNames[moduleName] = false;</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      return this._configShouldMockModuleNames[moduleName];</span>
+    }
+    return true;
+  } else {
+    return false;
+  }
+};
+&nbsp;
+Loader.prototype.constructBoundRequire = function(sourceModulePath) {
+  var boundModuleRequire = this.requireModuleOrMock.bind(
+    this,
+    sourceModulePath
+  );
+&nbsp;
+  boundModuleRequire.resolve = <span class="fstat-no" title="function not covered" >function(moduleName) {</span>
+<span class="cstat-no" title="statement not covered" >    var ret = this._moduleNameToPath(sourceModulePath, moduleName);</span>
+<span class="cstat-no" title="statement not covered" >    if (!ret) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error('Module(' + moduleName + ') not found!');</span>
+    }
+<span class="cstat-no" title="statement not covered" >    return ret;</span>
+  }.bind(this);
+  boundModuleRequire.generateMock = this._generateMock.bind(
+    this,
+    sourceModulePath
+  );
+  boundModuleRequire.requireMock = this.requireMock.bind(
+    this,
+    sourceModulePath
+  );
+  boundModuleRequire.requireActual = this.requireModule.bind(
+    this,
+    sourceModulePath
+  );
+&nbsp;
+  return boundModuleRequire;
+};
+&nbsp;
+/**
+ * Returns a map from modulePath -&gt; coverageInfo, where coverageInfo is of the
+ * structure returned By CoverageCollector.extractRuntimeCoverageInfo()
+ */
+Loader.prototype.getAllCoverageInfo = <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >  if (!this._config.collectCoverage) {</span>
+<span class="cstat-no" title="statement not covered" >    throw new Error(</span>
+      'config.collectCoverage was not set, so no coverage info has been ' +
+      '(or will be) collected!'
+    );
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var coverageInfo = {};</span>
+<span class="cstat-no" title="statement not covered" >  for (var filePath in this._coverageCollectors) {</span>
+<span class="cstat-no" title="statement not covered" >    coverageInfo[filePath] =</span>
+      this._coverageCollectors[filePath].extractRuntimeCoverageInfo();
+  }
+<span class="cstat-no" title="statement not covered" >  return coverageInfo;</span>
+};
+&nbsp;
+Loader.prototype.getCoverageForFilePath = <span class="fstat-no" title="function not covered" >function(filePath) {</span>
+<span class="cstat-no" title="statement not covered" >  if (!this._config.collectCoverage) {</span>
+<span class="cstat-no" title="statement not covered" >    throw new Error(</span>
+      'config.collectCoverage was not set, so no coverage info has been ' +
+      '(or will be) collected!'
+    );
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return (</span>
+    this._coverageCollectors.hasOwnProperty(filePath)
+    ? this._coverageCollectors[filePath].extractRuntimeCoverageInfo()
+    : null
+  );
+};
+&nbsp;
+/**
+ * Given the path to some file, find the path to all other files that it
+ * *directly* depends on.
+ *
+ * @param {String} modulePath Absolute path to the module in question
+ * @return {Array&lt;String&gt;} List of paths to files that the given module directly
+ *                         depends on.
+ */
+Loader.prototype.getDependenciesFromPath = <span class="fstat-no" title="function not covered" >function(modulePath) {</span>
+<span class="cstat-no" title="statement not covered" >  var resource = this._resourceMap.getResourceByPath(modulePath);</span>
+<span class="cstat-no" title="statement not covered" >  if (!resource) {</span>
+<span class="cstat-no" title="statement not covered" >    throw new Error('Unknown modulePath: ' + modulePath);</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (resource.type === 'ProjectConfiguration'</span>
+      || resource.type === 'Resource') {
+<span class="cstat-no" title="statement not covered" >    throw new Error(</span>
+      'Could not extract dependency information from this type of file!'
+    );
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return this._getDependencyPathsFromResource(resource);</span>
+};
+&nbsp;
+/**
+ * Given the path to some module, find all other files that *directly* depend on
+ * it.
+ *
+ * @param {String} modulePath Absolute path to the module in question
+ * @return {Array&lt;String&gt;} List of paths to files that directly depend on the
+ *                         given module path.
+ */
+Loader.prototype.getDependentsFromPath = <span class="fstat-no" title="function not covered" >function(modulePath) {</span>
+<span class="cstat-no" title="statement not covered" >  if (this._reverseDependencyMap === null) {</span>
+<span class="cstat-no" title="statement not covered" >    var resourceMap = this._resourceMap;</span>
+<span class="cstat-no" title="statement not covered" >    var reverseDepMap = this._reverseDependencyMap = {};</span>
+<span class="cstat-no" title="statement not covered" >    var allResources = resourceMap.getAllResources();</span>
+<span class="cstat-no" title="statement not covered" >    for (var resourceID in allResources) {</span>
+<span class="cstat-no" title="statement not covered" >      var resource = allResources[resourceID];</span>
+<span class="cstat-no" title="statement not covered" >      if (resource.type === 'ProjectConfiguration'</span>
+          || resource.type === 'Resource') {
+<span class="cstat-no" title="statement not covered" >        continue;</span>
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      var dependencyPaths = this._getDependencyPathsFromResource(resource);</span>
+<span class="cstat-no" title="statement not covered" >      for (var i = 0; i &lt; dependencyPaths.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >        var requiredModulePath = dependencyPaths[i];</span>
+<span class="cstat-no" title="statement not covered" >        if (!reverseDepMap.hasOwnProperty(requiredModulePath)) {</span>
+<span class="cstat-no" title="statement not covered" >          reverseDepMap[requiredModulePath] = {};</span>
+        }
+<span class="cstat-no" title="statement not covered" >        reverseDepMap[requiredModulePath][resource.path] = true;</span>
+      }
+    }
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  var reverseDeps = this._reverseDependencyMap[modulePath];</span>
+<span class="cstat-no" title="statement not covered" >  return reverseDeps ? Object.keys(reverseDeps) : [];</span>
+};
+&nbsp;
+/**
+ * Given a module name, return the mock version of said module.
+ *
+ * @param string currPath The path of the file that is attempting to
+ *                        resolve the module
+ * @param string moduleName The name of the module to be resolved
+ * @return object
+ */
+Loader.prototype.requireMock = function(currPath, moduleName) {
+  var moduleID = this._getNormalizedModuleID(currPath, moduleName);
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (this._explicitlySetMocks.hasOwnProperty(moduleID)) {
+<span class="cstat-no" title="statement not covered" >    return this._explicitlySetMocks[moduleID];</span>
+  }
+&nbsp;
+  // Look in the node-haste resource map
+  var manualMockResource = this._getResource('JSMock', moduleName);
+  var modulePath;
+  if (manualMockResource) {
+    modulePath = manualMockResource.path;
+  } else {
+    modulePath = this._moduleNameToPath(currPath, moduleName);
+&nbsp;
+    // If the actual module file has a __mocks__ dir sitting immediately next to
+    // it, look to see if there is a manual mock for this file in that dir.
+    //
+    // The reason why node-haste isn't good enough for this is because
+    // node-haste only handles manual mocks for @providesModules well. Otherwise
+    // it's not good enough to disambiguate something like the following
+    // scenario:
+    //
+    // subDir1/MyModule.js
+    // subDir1/__mocks__/MyModule.js
+    // subDir2/MyModule.js
+    // subDir2/__mocks__/MyModule.js
+    //
+    // Where some other module does a relative require into each of the
+    // respective subDir{1,2} directories and expects a manual mock
+    // corresponding to that particular MyModule.js file.
+    var moduleDir = path.dirname(modulePath);
+    var moduleFileName = path.basename(modulePath);
+    var potentialManualMock = path.join(moduleDir, '__mocks__', moduleFileName);
+    if (fs.existsSync(potentialManualMock)) {
+      manualMockResource = true;
+      modulePath = potentialManualMock;
+    }
+  }
+&nbsp;
+  if (this._mockRegistry.hasOwnProperty(modulePath)) {
+    return this._mockRegistry[modulePath];
+  }
+&nbsp;
+  if (manualMockResource) {
+    var moduleObj = {
+      exports: {},
+      __filename: modulePath
+    };
+    this._execModule(moduleObj);
+    this._mockRegistry[modulePath] = moduleObj.exports;
+  } else {
+    // Look for a real module to generate an automock from
+    this._mockRegistry[modulePath] = this._generateMock(
+      currPath,
+      moduleName
+    );
+  }
+&nbsp;
+  return this._mockRegistry[modulePath];
+};
+&nbsp;
+/**
+ * Given a module name, return the *real* (un-mocked) version of said
+ * module.
+ *
+ * @param string currPath The path of the file that is attempting to
+ *                        resolve the module
+ * @param string moduleName The name of the module to be resolved
+ * @param bool bypassRegistryCache Whether we should read from/write to the
+ *                                 module registry. Fuck this arg.
+ * @return object
+ */
+Loader.prototype.requireModule = function(currPath, moduleName,
+                                          bypassRegistryCache) {
+  var modulePath;
+  var moduleID = this._getNormalizedModuleID(currPath, moduleName);
+&nbsp;
+  // I don't like this behavior as it makes the module system's mocking
+  // rules harder to understand. Would much prefer that mock state were
+  // either "on" or "off" -- rather than "automock on", "automock off",
+  // "automock off -- but there's a manual mock, so you get that if you ask
+  // for the module and one doesnt exist", or "automock off -- but theres a
+  // useAutoMock: false entry in the package.json -- and theres a manual
+  // mock -- and the module is listed in the unMockList in the test config
+  // -- soooo...uhh...fuck I lost track".
+  //
+  // To simplify things I'd like to move to a system where tests must
+  // explicitly call .mock() on a module to recieve the mocked version if
+  // automocking is off. If a manual mock exists, that is used. Otherwise
+  // we fall back to the automocking system to generate one for you.
+  //
+  // The only reason we're supporting this in jest for now is because we
+  // have some tests that depend on this behavior. I'd like to clean this
+  // up at some point in the future.
+  var manualMockResource = null;
+  var moduleResource = null;
+  moduleResource = this._getResource('JS', moduleName);
+  manualMockResource = this._getResource('JSMock', moduleName);
+  if (!moduleResource
+      &amp;&amp; manualMockResource
+      &amp;&amp; manualMockResource.path !== this._isCurrentlyExecutingManualMock
+      &amp;&amp; this._explicitShouldMock[moduleID] !== false) {
+    modulePath = manualMockResource.path;
+  }
+&nbsp;
+  if (!modulePath) {
+    modulePath = this._moduleNameToPath(currPath, moduleName);
+  }
+&nbsp;
+  if (NODE_CORE_MODULES[moduleName]) {
+    return require(moduleName);
+  }
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!modulePath) {
+<span class="cstat-no" title="statement not covered" >    throw new Error(</span>
+      'Cannot find module \'' + moduleName + '\' from \'' + currPath +
+      '\''
+    );
+  }
+&nbsp;
+  var moduleObj;
+  if (modulePath &amp;&amp; this._builtInModules.hasOwnProperty(modulePath)) {
+    moduleObj = this._builtInModules[modulePath](currPath);
+  }
+&nbsp;
+  if (!moduleObj &amp;&amp; !bypassRegistryCache) {
+    moduleObj = this._moduleRegistry[modulePath];
+  }
+  if (!moduleObj) {
+    // We must register the pre-allocated module object first so that any
+    // circular dependencies that may arise while evaluating the module can
+    // be satisfied.
+    moduleObj = {
+      __filename: modulePath,
+      exports: {}
+    };
+&nbsp;
+    if (!bypassRegistryCache) {
+      this._moduleRegistry[modulePath] = moduleObj;
+    }
+&nbsp;
+    // Good ole node...
+    if (path.extname(modulePath) === '.json') {
+      moduleObj.exports = JSON.parse(fs.readFileSync(
+        modulePath,
+        'utf8'
+      ));
+    } else {
+      this._execModule(moduleObj);
+    }
+  }
+&nbsp;
+  return moduleObj.exports;
+};
+&nbsp;
+/**
+ * Given a module name, return either the real module or the mock version of
+ * that module -- depending on the mocking state of the loader (and, perhaps
+ * the mocking state for the requested module).
+ *
+ * @param string currPath The path of the file that is attempting to
+ *                        resolve the module
+ * @param string moduleName The name of the module to be resolved
+ * @return object
+ */
+Loader.prototype.requireModuleOrMock = function(currPath, moduleName) {
+  if (this._shouldMock(currPath, moduleName)) {
+    return this.requireMock(currPath, moduleName);
+  } else {
+    return this.requireModule(currPath, moduleName);
+  }
+};
+&nbsp;
+/**
+ * Clears all cached module objects. This allows one to reset the state of
+ * all modules in the system. It will reset (read: clear) the export objects
+ * for all evaluated modules and mocks.
+ *
+ * @return void
+ */
+Loader.prototype.resetModuleRegistry = function() {
+  this._mockRegistry = {};
+  this._moduleRegistry = {};
+  this._builtInModules = {
+    'jest-runtime': function(currPath) {
+      var jestRuntime = {
+        exports: {
+          autoMockOff: function() {
+            this._shouldAutoMock = false;
+            return jestRuntime.exports;
+          }.bind(this),
+&nbsp;
+          autoMockOn: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this._shouldAutoMock = true;</span>
+<span class="cstat-no" title="statement not covered" >            return jestRuntime.exports;</span>
+          }.bind(this),
+&nbsp;
+          clearAllTimers: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this._environment.fakeTimers.clearAllTimers();</span>
+          }.bind(this),
+&nbsp;
+          dontMock: function(moduleName) {
+            var moduleID = this._getNormalizedModuleID(currPath, moduleName);
+            this._explicitShouldMock[moduleID] = false;
+            return jestRuntime.exports;
+          }.bind(this),
+&nbsp;
+          genMockFromModule: function(moduleName) {
+            return this._generateMock(
+              this._currentlyExecutingModulePath,
+              moduleName
+            );
+          }.bind(this),
+&nbsp;
+          genMockFunction: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            return moduleMocker.getMockFunction();</span>
+          },
+&nbsp;
+          mock: <span class="fstat-no" title="function not covered" >function(moduleName) {</span>
+<span class="cstat-no" title="statement not covered" >            var moduleID = this._getNormalizedModuleID(currPath, moduleName);</span>
+<span class="cstat-no" title="statement not covered" >            this._explicitShouldMock[moduleID] = true;</span>
+<span class="cstat-no" title="statement not covered" >            return jestRuntime.exports;</span>
+          }.bind(this),
+&nbsp;
+          resetModuleRegistry: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            var globalMock;</span>
+<span class="cstat-no" title="statement not covered" >            for (var key in this._environment.global) {</span>
+<span class="cstat-no" title="statement not covered" >              globalMock = this._environment.global[key];</span>
+<span class="cstat-no" title="statement not covered" >              if ((typeof globalMock === 'object' &amp;&amp; globalMock !== null)</span>
+                  || typeof globalMock === 'function') {
+<span class="cstat-no" title="statement not covered" >                globalMock._isMockFunction &amp;&amp; globalMock.mockClear();</span>
+              }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (this._environment.global.mockClearTimers) {</span>
+<span class="cstat-no" title="statement not covered" >              this._environment.global.mockClearTimers();</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            this.resetModuleRegistry();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return jestRuntime.exports;</span>
+          }.bind(this),
+&nbsp;
+          runAllTicks: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this._environment.fakeTimers.runAllTicks();</span>
+          }.bind(this),
+&nbsp;
+          runAllTimers: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this._environment.fakeTimers.runAllTimers();</span>
+          }.bind(this),
+&nbsp;
+          runOnlyPendingTimers: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this._environment.fakeTimers.runOnlyPendingTimers();</span>
+          }.bind(this),
+&nbsp;
+          setMock: <span class="fstat-no" title="function not covered" >function(moduleName, moduleExports) {</span>
+<span class="cstat-no" title="statement not covered" >            var moduleID = this._getNormalizedModuleID(currPath, moduleName);</span>
+<span class="cstat-no" title="statement not covered" >            this._explicitShouldMock[moduleID] = true;</span>
+<span class="cstat-no" title="statement not covered" >            this._explicitlySetMocks[moduleID] = moduleExports;</span>
+<span class="cstat-no" title="statement not covered" >            return jestRuntime.exports;</span>
+          }.bind(this),
+&nbsp;
+          useFakeTimers: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this._environment.fakeTimers.useFakeTimers();</span>
+          }.bind(this),
+&nbsp;
+          useRealTimers: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this._environment.fakeTimers.useRealTimers();</span>
+          }.bind(this)
+        }
+      };
+&nbsp;
+      // This is a pretty common API to use in many tests, so this is just a
+      // shorter alias to make it less annoying to type out each time.
+      jestRuntime.exports.genMockFn = jestRuntime.exports.genMockFunction;
+&nbsp;
+      return jestRuntime;
+    }.bind(this),
+&nbsp;
+    // This is a legacy API that will soon be deprecated.
+    // Don't use it for new stuff as it will go away soon!
+    'node-haste': <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >      return {</span>
+        exports: {
+          // Do not use this API -- it is deprecated and will go away very soon!
+          getResourceMap: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            return this._resourceMap;</span>
+          }.bind(this)
+        }
+      };
+    }.bind(this),
+&nbsp;
+    // This is a legacy API that will soon be deprecated.
+    // Don't use it for new stuff as it will go away soon!
+    'mocks': <span class="fstat-no" title="function not covered" >function(currPath) {</span>
+<span class="cstat-no" title="statement not covered" >      var mocks = {</span>
+        exports: {
+          generateFromMetadata: moduleMocker.generateFromMetadata,
+          getMetadata: moduleMocker.getMetadata,
+          getMockFunction: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            return this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).genMockFn();
+          }.bind(this),
+        }
+      };
+<span class="cstat-no" title="statement not covered" >      mocks.exports.getMockFn = mocks.exports.getMockFunction;</span>
+<span class="cstat-no" title="statement not covered" >      return mocks;</span>
+    }.bind(this),
+&nbsp;
+    // This is a legacy API that will soon be deprecated.
+    // Don't use it for new stuff as it will go away soon!
+    'mock-modules': function(currPath) {
+      var mockModules = {
+        exports: {
+          dontMock: <span class="fstat-no" title="function not covered" >function(moduleName) {</span>
+<span class="cstat-no" title="statement not covered" >            this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).dontMock(moduleName);
+<span class="cstat-no" title="statement not covered" >            return mockModules.exports;</span>
+          }.bind(this),
+&nbsp;
+          mock: <span class="fstat-no" title="function not covered" >function(moduleName) {</span>
+<span class="cstat-no" title="statement not covered" >            this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).mock(moduleName);
+<span class="cstat-no" title="statement not covered" >            return mockModules.exports;</span>
+          }.bind(this),
+&nbsp;
+          autoMockOff: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).autoMockOff();
+<span class="cstat-no" title="statement not covered" >            return mockModules.exports;</span>
+          }.bind(this),
+&nbsp;
+          autoMockOn: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).autoMockOn();
+<span class="cstat-no" title="statement not covered" >            return mockModules.exports;</span>
+          }.bind(this),
+&nbsp;
+          // TODO: This is such a bad name, we should rename it to
+          //       `resetModuleRegistry()` -- or anything else, really
+          dumpCache: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).resetModuleRegistry();
+<span class="cstat-no" title="statement not covered" >            return mockModules.exports;</span>
+          }.bind(this),
+&nbsp;
+          setMock: <span class="fstat-no" title="function not covered" >function(moduleName, moduleExports) {</span>
+<span class="cstat-no" title="statement not covered" >            this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).setMock(moduleName, moduleExports);
+<span class="cstat-no" title="statement not covered" >            return mockModules.exports;</span>
+          }.bind(this),
+&nbsp;
+          // wtf is this shit?
+          hasDependency: function(moduleAName, moduleBName) {
+            var traversedModules = {};
+&nbsp;
+            var self = this;
+            function _recurse(moduleAName, moduleBName) {
+              traversedModules[moduleAName] = true;
+              if (moduleAName === moduleBName) {
+                return true;
+              }
+              var moduleAResource = self._getResource('JS', moduleAName);
+              return !!(
+                moduleAResource
+                &amp;&amp; moduleAResource.requiredModules
+                &amp;&amp; moduleAResource.requiredModules.some(function(dep) {
+                  return !traversedModules[dep] &amp;&amp; _recurse(dep, moduleBName);
+                })
+              );
+            }
+&nbsp;
+            return _recurse(moduleAName, moduleBName);
+          }.bind(this),
+&nbsp;
+          generateMock: <span class="fstat-no" title="function not covered" >function(moduleName) {</span>
+<span class="cstat-no" title="statement not covered" >            return this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).genMockFromModule(moduleName);
+          }.bind(this),
+&nbsp;
+          useActualTimers: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >            this.requireModule(</span>
+              currPath,
+              'jest-runtime'
+            ).useActualTimers();
+          }.bind(this),
+&nbsp;
+          /**
+           * Load actual module without reading from or writing to module
+           * exports registry. This method's name is devastatingly misleading.
+           * :(
+           */
+          loadActualModule: <span class="fstat-no" title="function not covered" >function(moduleName) {</span>
+<span class="cstat-no" title="statement not covered" >            return this.requireModule(</span>
+              this._currentlyExecutingModulePath,
+              moduleName,
+              true // yay boolean args!
+            );
+          }.bind(this)
+        }
+      };
+      return mockModules;
+    }.bind(this)
+  };
+};
+&nbsp;
+module.exports = Loader;
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Dec 01 2014 12:52:30 GMT-0500 (EST)</div>
+</div>
+
+<script src="../../prettify.js"></script>
+
+<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
+<script>
+
+    YUI().use('datatable', function (Y) {
+
+        var formatters = {
+          pct: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              try {
+                  return o.value.toFixed(2) + '%';
+              } catch (ex) { return o.value + '%'; }
+          },
+          html: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.record.get(o.column.key + '_html');
+          }
+        },
+          defaultFormatter = function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.value;
+          };
+
+        function getColumns(theadNode) {
+            var colNodes = theadNode.all('tr th'),
+                cols = [],
+                col;
+            colNodes.each(function (colNode) {
+                col = {
+                    key: colNode.getAttribute('data-col'),
+                    label: colNode.get('innerHTML') || ' ',
+                    sortable: !colNode.getAttribute('data-nosort'),
+                    className: colNode.getAttribute('class'),
+                    type: colNode.getAttribute('data-type'),
+                    allowHTML: colNode.getAttribute('data-html') === 'true' || colNode.getAttribute('data-fmt') === 'html'
+                };
+                col.formatter = formatters[colNode.getAttribute('data-fmt')] || defaultFormatter;
+                cols.push(col);
+            });
+            return cols;
+        }
+
+        function getRowData(trNode, cols) {
+            var tdNodes = trNode.all('td'),
+                    i,
+                    row = { classes: {} },
+                    node,
+                    name;
+            for (i = 0; i < cols.length; i += 1) {
+                name = cols[i].key;
+                node = tdNodes.item(i);
+                row[name] = node.getAttribute('data-value') || node.get('innerHTML');
+                row[name + '_html'] = node.get('innerHTML');
+                row.classes[name] = node.getAttribute('class');
+                //Y.log('Name: ' + name + '; Value: ' + row[name]);
+                if (cols[i].type === 'number') { row[name] = row[name] * 1; }
+            }
+            //Y.log(row);
+            return row;
+        }
+
+        function getData(tbodyNode, cols) {
+            var data = [];
+            tbodyNode.all('tr').each(function (trNode) {
+                data.push(getRowData(trNode, cols));
+            });
+            return data;
+        }
+
+        function replaceTable(node) {
+            if (!node) { return; }
+            var cols = getColumns(node.one('thead')),
+                data = getData(node.one('tbody'), cols),
+                table,
+                parent = node.get('parentNode');
+
+            table = new Y.DataTable({
+                columns: cols,
+                data: data,
+                sortBy: 'file'
+            });
+            parent.set('innerHTML', '');
+            table.render(parent);
+        }
+
+        Y.on('domready', function () {
+            replaceTable(Y.one('div.coverage-summary table'));
+            if (typeof prettyPrint === 'function') {
+                prettyPrint();
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-// This module uses arguments.callee, so it can't currently run in strict mode
+// This module uses the Function constructor, so it can't currently run
+// in strict mode
 /* jshint strict:false */
 
 function isA(typeName, value) {
@@ -46,6 +47,38 @@ function getType(ref) {
   return null;
 }
 
+/**
+ * methods on ES6 classes are not enumerable, so they can't be found with a
+ * simple `for (var slot in ...) {` so that had to be replaced with getSlots()
+ */
+var forbiddenProps = Object.create(null, {
+  caller: {value: true},
+  callee: {value: true},
+  arguments: {value: true},
+});
+
+function getSlots(object) {
+  var slots = {};
+  if (!object) {
+    return [];
+  }
+  //
+  var collectProp = function(prop) {
+    if (prop in forbiddenProps) {
+      return;
+    }
+    var propDesc = Object.getOwnPropertyDescriptor(object, prop);
+    if (!propDesc.get) {
+      slots[prop] = true;
+    }
+  };
+  do {
+    Object.getOwnPropertyNames(object).forEach(collectProp);
+    object = Object.getPrototypeOf(object);
+  } while (object && Object.getPrototypeOf(object) !== null);
+  return Object.keys(slots);
+}
+
 function makeComponent(metadata) {
   switch (metadata.type) {
     case 'object':
@@ -73,13 +106,12 @@ function makeComponent(metadata) {
         (metadata.members && metadata.members.prototype &&
           metadata.members.prototype.members) || {};
 
-      var f = function() {
+      var mockConstructor = function() {
         instances.push(this);
         calls.push(Array.prototype.slice.call(arguments));
-        /* jshint noarg:false */
-        if (this instanceof arguments.callee) {
+        if (this instanceof f) {
           // This is probably being called as a constructor
-          for (var slot in prototype) {
+          getSlots(prototype).forEach(function(slot) {
             // Copy prototype methods to the instance to make
             // it easier to interact with mock instance call and
             // return values
@@ -88,7 +120,7 @@ function makeComponent(metadata) {
               this[slot] = generateFromMetadata(prototype[slot]);
               this[slot]._protoImpl = protoImpl;
             }
-          }
+          }, this);
 
           // Run the mock constructor implementation
           return mockImpl && mockImpl.apply(this, arguments);
@@ -113,18 +145,27 @@ function makeComponent(metadata) {
         }
 
         // Otherwise use prototype implementation
-        if (returnValue === undefined && arguments.callee._protoImpl) {
-          return arguments.callee._protoImpl.apply(this, arguments);
+        if (returnValue === undefined && f._protoImpl) {
+          return f._protoImpl.apply(this, arguments);
         }
 
         return returnValue;
       };
 
+      // Preserve `name` property of mocked function.
+      /* jshint evil:true */
+      var f = new Function(
+        'mockConstructor',
+        'return function ' + metadata.name + '(){' +
+          'return mockConstructor.apply(this,arguments);' +
+        '}'
+      )(mockConstructor);
+
       f._isMockFunction = true;
 
       f.mock = {
-        calls : calls,
-        instances : instances
+        calls: calls,
+        instances: instances
       };
 
       f.mockClear = function() {
@@ -193,14 +234,14 @@ function generateFromMetadata(_metadata) {
       mock.__TCmeta = metadata.__TCmeta;
     }
 
-    for (var slot in metadata.members) {
+    getSlots(metadata.members).forEach(function(slot) {
       var slotMetadata = metadata.members[slot];
       if (slotMetadata.ref !== null && slotMetadata.ref !== undefined) {
         callbacks.push(getRefCallback(slot, slotMetadata.ref));
       } else {
         mock[slot] = generateMock(slotMetadata);
       }
-    }
+    });
 
     if (metadata.type !== 'undefined'
         && metadata.type !== 'null'
@@ -241,6 +282,7 @@ function _getMetadata(component, _refs) {
     metadata.value = component;
     return metadata;
   } else if (type === 'function') {
+    metadata.name = component.name;
     metadata.__TCmeta = component.__TCmeta;
     if (component._isMockFunction) {
       metadata.mockImpl = component._getMockImplementation();
@@ -265,20 +307,20 @@ function _getMetadata(component, _refs) {
   // Leave arrays alone
   if (type !== 'array') {
     if (type !== 'undefined') {
-      for (var slot in component) {
+      getSlots(component).forEach(function(slot) {
         if (slot.charAt(0) === '_' ||
             (type === 'function' && component._isMockFunction &&
              slot.match(/^mock/))) {
-          continue;
+          return;
         }
 
         if (!component.hasOwnProperty && component[slot] !== undefined ||
-            component.hasOwnProperty(slot) ||
+            (component.hasOwnProperty && component.hasOwnProperty(slot)) ||
             /* jshint eqeqeq:false */
             (type === 'object' && component[slot] != Object.prototype[slot])) {
           addMember(slot, _getMetadata(component[slot], refs));
         }
-      }
+      });
     }
 
     // If component is native code function, prototype might be undefined
@@ -301,9 +343,9 @@ function removeUnusedRefs(metadata) {
   function visit(metadata, f) {
     f(metadata);
     if (metadata.members) {
-      for (var slot in metadata.members) {
+      getSlots(metadata.members).forEach(function(slot) {
         visit(metadata.members[slot], f);
-      }
+      });
     }
   }
 

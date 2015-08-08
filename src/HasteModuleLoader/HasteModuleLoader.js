@@ -22,8 +22,8 @@ var NodeHaste = require('node-haste/lib/Haste');
 var os = require('os');
 var fs = require('graceful-fs');
 var path = require('path');
-var Q = require('q');
 var resolve = require('browser-resolve');
+var Promise = require('bluebird');
 var utils = require('../lib/utils');
 var browserify = require('browserify');
 var Handlebars = require('handlebars');
@@ -117,7 +117,6 @@ function _getCacheFilePath(config) {
 
 function Loader(config, environment, resourceMap) {
   this._config = config;
-  this._CoverageCollector = require(config.coverageCollector);
   this._coverageCollectors = {};
   this._currentlyExecutingModulePath = '';
   this._environment = environment;
@@ -130,6 +129,10 @@ function Loader(config, environment, resourceMap) {
   this._reverseDependencyMap = null;
   this._shouldAutoMock = true;
   this._configShouldMockModuleNames = {};
+
+  if (config.collectCoverage) {
+    this._CoverageCollector = require(config.coverageCollector);
+  }
 
   if (_configUnmockListRegExpCache === null) {
     // Node must have been run with --harmony in order for WeakMap to be
@@ -162,44 +165,36 @@ function Loader(config, environment, resourceMap) {
 }
 
 Loader.loadResourceMap = function(config, options) {
-  options = options || {};
-
-  var deferred = Q.defer();
-  try {
-    _constructHasteInst(config, options).update(
-      _getCacheFilePath(config),
-      function(resourceMap) {
-        deferred.resolve(resourceMap);
-      }
-    );
-  } catch (e) {
-    deferred.reject(e);
-  }
-
-  return deferred.promise;
+  return new Promise(function(resolve, reject) {
+    try {
+      _constructHasteInst(config, options || {}).update(
+        _getCacheFilePath(config),
+        resolve
+      );
+    } catch (e) {
+      reject(e);
+    }
+  });
 };
 
 Loader.loadResourceMapFromCacheFile = function(config, options) {
-  options = options || {};
-
-  var deferred = Q.defer();
-  try {
-    var hasteInst = _constructHasteInst(config, options);
-    hasteInst.loadMap(
-      _getCacheFilePath(config),
-      function(err, map) {
-        if (err) {
-          deferred.reject(err);
-        } else {
-          deferred.resolve(map);
+  return new Promise(function(resolve, reject) {
+    try {
+      var hasteInst = _constructHasteInst(config, options || {});
+      hasteInst.loadMap(
+        _getCacheFilePath(config),
+        function(err, map) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(map);
+          }
         }
-      }
-    );
-  } catch (e) {
-    deferred.reject(e);
-  }
-
-  return deferred.promise;
+      );
+    } catch (e) {
+      reject(e);
+    }
+  });
 };
 
 /**
@@ -462,9 +457,12 @@ Loader.prototype._moduleNameToPath = function(currPath, moduleName) {
       // LOAD_AS_DIRECTORY #1
       var packagePath = path.join(modulePath, 'package.json');
       if (fs.existsSync(packagePath)) {
-        var mainPath = path.join(modulePath, require(packagePath).main);
-        if (fs.existsSync(mainPath)) {
-          return mainPath;
+        var packageData = require(packagePath);
+        if (packageData.main) {
+          var mainPath = path.join(modulePath, packageData.main);
+          if (fs.existsSync(mainPath)) {
+            return mainPath;
+          }
         }
       }
 
@@ -915,7 +913,7 @@ Loader.prototype.requireModule = function(currPath, moduleName,
 
     // Good ole node...
     if (path.extname(modulePath) === '.json') {
-      moduleObj.exports = JSON.parse(fs.readFileSync(
+      moduleObj.exports = this._environment.global.JSON.parse(fs.readFileSync(
         modulePath,
         'utf8'
       ));
@@ -948,6 +946,10 @@ Loader.prototype.requireModuleOrMock = function(currPath, moduleName) {
   }
 };
 
+Loader.prototype.getJestRuntime = function(dir) {
+    return this._builtInModules['jest-runtime'](dir).exports;
+};
+
 /**
  * Clears all cached module objects. This allows one to reset the state of
  * all modules in the system. It will reset (read: clear) the export objects
@@ -962,6 +964,12 @@ Loader.prototype.resetModuleRegistry = function() {
     'jest-runtime': function(currPath) {
       var jestRuntime = {
         exports: {
+          addMatchers: function(matchers) {
+            var jasmine = this._environment.global.jasmine;
+            var spec = jasmine.getEnv().currentSpec;
+            spec.addMatchers(matchers);
+          }.bind(this),
+
           autoMockOff: function() {
             this._shouldAutoMock = false;
             return jestRuntime.exports;
@@ -978,6 +986,10 @@ Loader.prototype.resetModuleRegistry = function() {
 
           setHandlebars: function(hndlbars) {
             this.Handlebars = hndlbars;
+          }.bind(this),
+
+          currentTestPath: function() {
+            return this._environment.testFilePath;
           }.bind(this),
 
           dontMock: function(moduleName) {

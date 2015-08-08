@@ -1,7 +1,7 @@
 {
   "name": "jest-cli",
   "description": "Painless JavaScript Unit Testing.",
-  "version": "0.4.0",
+  "version": "0.4.18",
   "main": "src/jest.js",
   "dependencies": {
     "browser-resolve": "git://github.com/securingsincity/node-browser-resolve.git",
@@ -10,26 +10,26 @@
     "diff": "~1.0.4",
     "graceful-fs": "^2.0.3",
     "handlebars": "^2.0.0",
-    "harmonize": "1.4.0",
-
+    "harmonize": "1.4.2",
     "istanbul": "^0.3.2",
     "jasmine-only": "0.1.0",
     "jasmine-pit": "~2.0.0",
     "jsdom": "~0.10.3",
-    "node-find-files": "~0.0.2",
-    "node-haste": "git://github.com/facebook/node-haste.git",
+    "node-haste": "^1.2.8",
     "node-worker-pool": "~2.4.2",
+    "object-assign": "^3.0.0",
     "optimist": "~0.6.0",
-    "q": "~0.9.7",
+    "bluebird": "~2.9.30",
     "resolve": "~0.6.1",
     "through": "^2.3.4",
-    "underscore": "1.2.4"
+    "lodash.template": "^3.0.0"
   },
   "devDependencies": {
     "browserify": "^6.3.3",
     "hbsfy": "^2.2.0",
     "jshint": "~2.5.0",
-    "vinyl-source-stream": "^1.0.0"
+    "vinyl-source-stream": "^1.0.0",
+    "node-find-files": "0.0.2"
   },
   "bin": {
     "jest": "./bin/jest.js"
@@ -42,7 +42,6 @@
     "url": "https://github.com/facebook/jest"
   },
   "scripts": {
-    "prepublish": "jshint --config=.jshintrc --exclude=src/coverageTemplate.js src",
     "test": "jshint --config=.jshintrc --exclude=src/coverageTemplate.js src && node bin/jest.js"
   },
   "jest": {
@@ -63,5 +62,5 @@
     "jasmine",
     "mock"
   ],
-  "license": "BSD"
+  "license": "BSD-3-Clause"
 }

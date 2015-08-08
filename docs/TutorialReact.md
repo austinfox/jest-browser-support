@@ -10,8 +10,6 @@ next: common-js-testing
 At Facebook, we use Jest to test [React](http://facebook.github.io/react/) applications. Let's implement a simple checkbox which swaps between two labels:
 
 ```javascript
-/** @jsx React.DOM */
-
 // CheckboxWithLabel.js
 
 var React = require('react/addons');
@@ -41,8 +39,6 @@ module.exports = CheckboxWithLabel;
 The test code is pretty straightforward; we use React's [TestUtils](http://facebook.github.io/react/docs/test-utils.html) in order to manipulate React components.
 
 ```javascript
-/** @jsx React.DOM */
-
 // __tests__/CheckboxWithLabel-test.js
 
 jest.dontMock('../CheckboxWithLabel.js');
@@ -60,13 +56,13 @@ describe('CheckboxWithLabel', function() {
     // Verify that it's Off by default
     var label = TestUtils.findRenderedDOMComponentWithTag(
       checkbox, 'label');
-    expect(label.getDOMNode().textContent).toEqual('Off');
+    expect(React.findDOMNode(label).textContent).toEqual('Off');
 
     // Simulate a click and verify that it is now On
     var input = TestUtils.findRenderedDOMComponentWithTag(
       checkbox, 'input');
     TestUtils.Simulate.change(input);
-    expect(label.getDOMNode().textContent).toEqual('On');
+    expect(React.findDOMNode(label).textContent).toEqual('On');
   });
 });
 ```
