@@ -28,7 +28,7 @@ var utils = require('../lib/utils');
 var browserify = require('browserify');
 var Handlebars = require('handlebars');
 var source = require('vinyl-source-stream');
-
+var minimatch = require("minimatch")
 var COVERAGE_STORAGE_VAR_NAME = '____JEST_COVERAGE_DATA____';
 
 var NODE_PATH = process.env.NODE_PATH;
@@ -196,7 +196,16 @@ Loader.loadResourceMapFromCacheFile = function(config, options) {
     }
   });
 };
+Loader.prototype.isToBeCovered = function(modulePath, onlyCollectFrom) {
+  var isToBeCovered = false;
 
+  Object.keys(onlyCollectFrom).forEach(function(onlyCollectObj) {
+    if (minimatch(modulePath, onlyCollectObj)) {
+      isToBeCovered = true;
+    }
+  });
+  return isToBeCovered;
+}
 /**
  * Given the path to a module: Read it from disk (synchronously) and
  * evaluate it's constructor function to generate the module and exports
@@ -238,7 +247,7 @@ Loader.prototype._execModule = function(moduleObj) {
   var onlyCollectFrom = this._config.collectCoverageOnlyFrom;
   var shouldCollectCoverage = false;
   if (this._config.collectCoverage === true && (!onlyCollectFrom
-    || (onlyCollectFrom && onlyCollectFrom[modulePath] === true))) {
+    || (onlyCollectFrom && this.isToBeCovered(modulePath, onlyCollectFrom) === true))) {
     shouldCollectCoverage = true;
   }
 
@@ -947,7 +956,7 @@ Loader.prototype.requireModuleOrMock = function(currPath, moduleName) {
 };
 
 Loader.prototype.getJestRuntime = function(dir) {
-    return this._builtInModules['jest-runtime'](dir).exports;
+  return this._builtInModules['jest-runtime'](dir).exports;
 };
 
 /**

@@ -4,6 +4,7 @@
   "version": "0.4.18",
   "main": "src/jest.js",
   "dependencies": {
+    "bluebird": "~2.9.30",
     "browser-resolve": "git://github.com/securingsincity/node-browser-resolve.git",
     "coffee-script": "^1.8.0",
     "cover": "~0.2.8",
@@ -15,14 +16,14 @@
     "jasmine-only": "0.1.0",
     "jasmine-pit": "~2.0.0",
     "jsdom": "~0.10.3",
+    "lodash.template": "^3.0.0",
+    "minimatch": "^2.0.10",
     "node-haste": "^1.2.8",
     "node-worker-pool": "~2.4.2",
     "object-assign": "^3.0.0",
     "optimist": "~0.6.0",
-    "bluebird": "~2.9.30",
     "resolve": "~0.6.1",
-    "through": "^2.3.4",
-    "lodash.template": "^3.0.0"
+    "through": "^2.3.4"
   },
   "devDependencies": {
     "browserify": "^6.3.3",
